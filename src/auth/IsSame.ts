@@ -1,8 +1,13 @@
+import { Inject, Injectable } from "@nestjs/common";
 import { registerDecorator, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
+import { AuthService } from "src/auth/auth.service";
 
-@ValidatorConstraint({name: 'isSame'})
+@ValidatorConstraint({name: 'isSame', async: true})
+@Injectable()
 export class IsSameConstraint implements ValidatorConstraintInterface {
-    validate(text: string, validationArguments?: ValidationArguments): boolean | Promise<boolean> {
+    constructor(@Inject('AuthService') private authService: AuthService){}
+    async validate(text: string, validationArguments?: ValidationArguments): Promise<boolean> {
+        console.log(this.authService);
         const [relatedPropertyName] = validationArguments.constraints;
         const relatedValue = (validationArguments.object as any)[relatedPropertyName];
         return text === relatedValue;
