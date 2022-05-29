@@ -4,12 +4,14 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import connectionOptions from './ormconfig';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
     AuthModule,
     TypeOrmModule.forRoot(connectionOptions),
+    ConfigModule.forRoot(),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
