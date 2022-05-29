@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { RegisterDto } from "./dto/register.dto";
 import { User } from "./entities/user.entity";
 import { UserRepository } from "./repositories/user.repository";
@@ -17,6 +17,14 @@ export class AuthService {
         user.password = await bcrypt.hash(registerDto.password, 10);
         await this.userRepository.save(user);
         return user.id.toString();
+    }
+
+    async getUser(id: string) {
+       const user = await this.userRepository.findOne({ id: +id });
+       if (!user) {
+           throw new NotFoundException();
+       }
+       return user;
     }
 
     async authenticateUser(email: string, password: string) {
