@@ -15,7 +15,7 @@ export class TorrentService {
     async createNewTorrent(path: string, userId: number) {
         const user = await this.userRepository.findOne({ id: userId });
         const torrent = new Torrent(user, path);
-        this.torrentRepository.save(torrent);
-        return user;
+        await this.torrentRepository.save(torrent);
+        return torrent;
     }
 }
