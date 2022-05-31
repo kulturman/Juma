@@ -16,6 +16,7 @@ import { APP_GUARD } from "@nestjs/core";
         TypeOrmModule.forFeature([UserRepository]),
         JwtModule.register({})
     ],
+    exports: [TypeOrmModule],
     controllers: [AuthController],
     providers: [
         AuthService, IsUniqueConstraint,

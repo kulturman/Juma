@@ -4,6 +4,13 @@ import { TorrentStatus } from "./torrent-status.enum";
 
 @Entity({name: 'torrents'})
 export class Torrent {
+    constructor(user: User, path: string) {
+        this.user = user;
+        this.progression = 0;
+        this.status = TorrentStatus.QUEING;
+        this.path = path;
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
