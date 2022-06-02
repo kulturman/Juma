@@ -6,6 +6,7 @@ import connectionOptions from './ormconfig';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { ConfigModule } from '@nestjs/config';
 import { TorrentModule } from './torrent/torrent.module';
+import { BullModule } from '@nestjs/bull';
 
 
 @Module({
@@ -14,6 +15,12 @@ import { TorrentModule } from './torrent/torrent.module';
     TorrentModule,
     TypeOrmModule.forRoot(connectionOptions),
     ConfigModule.forRoot(),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379
+      }
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
