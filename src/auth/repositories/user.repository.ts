@@ -3,5 +3,11 @@ import { User } from "../entities/user.entity";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+    constructor() {
+        super();
+    }
 
+    async findD() {
+        return await super.find();
+    }
 }

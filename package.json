@@ -44,7 +44,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.2.45"
+    "typeorm": "^0.2.45",
+    "webtorrent": "^1.8.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
