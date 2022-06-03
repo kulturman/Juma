@@ -5,7 +5,8 @@ import { join } from "path";
 import { Repository } from "typeorm";
 import { Torrent } from "./entities/torrent.entity";
 import { TorrentStatus } from "./torrent-status.enum";
-const WebTorrent = require('webtorrent')
+import * as fs from 'fs';
+import * as WebTorrent from 'webtorrent';
 
 @Processor('downloadTorrent')
 export class DownloadTorrentProcessor {
@@ -17,11 +18,17 @@ export class DownloadTorrentProcessor {
         torrentEntity.status = TorrentStatus.STARTED;
         const repository = this.torrentRepository;
         await this.torrentRepository.save(torrentEntity);
-        const client = new WebTorrent()
+        const client = new WebTorrent();
+        const baseDirectory = join(__dirname , '../');
+        const userTorrentDirectory = `${baseDirectory}${job.data.userId}`;
+
+        if (!fs.existsSync(userTorrentDirectory)) {
+            fs.mkdirSync(userTorrentDirectory);
+        }
 
         client.add(
             torrentEntity.path,
-            {path: join(__dirname , '../')},
+            { path: userTorrentDirectory },
             torrent => {
                 let interval = setInterval(async () => {
                     torrentEntity.progression = torrent.progress * 100;
