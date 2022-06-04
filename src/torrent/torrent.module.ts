@@ -13,6 +13,7 @@ import { TorrentService } from './torrent.service';
         AuthModule,
         BullModule.registerQueue({
             name: 'downloadTorrent',
+            settings: { maxStalledCount: 0 }
         })
     ],
     controllers: [TorrentController],
