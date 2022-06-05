@@ -4,10 +4,11 @@ import { TorrentStatus } from "../torrent-status.enum";
 
 @Entity({name: 'torrents'})
 export class Torrent {
-    constructor(user: User, path: string) {
+    constructor(user: User, path: string, torrentName: string) {
         this.user = user;
         this.progression = 0;
-        this.status = TorrentStatus.QUEING;
+        this.torrentName = torrentName;
+        this.status = TorrentStatus.QUEUED;
         this.path = path;
     }
 
@@ -16,6 +17,9 @@ export class Torrent {
 
     @Column()
     path: string;
+
+    @Column({name: 'torrent_name'})
+    torrentName: string;
 
     @Column({
         type: 'set',

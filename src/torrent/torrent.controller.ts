@@ -8,8 +8,6 @@ import { Repository } from "typeorm";
 import { Torrent } from "./entities/torrent.entity";
 import { TorrentService } from "./torrent.service";
 
-
-
 @Controller('torrents')
 export class TorrentController {
     constructor(
@@ -21,7 +19,7 @@ export class TorrentController {
     @Post()
     @UseInterceptors(FileInterceptor('file', {dest: join(__dirname, '../uploads/torrents')}))
     async uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
-        const torrentEntity = await this.torrentService.createNewTorrent(file.path, req.user.id);
+        const torrentEntity = await this.torrentService.createNewTorrent(file.path, req.user.id, file.originalname);
 
         await this.downloadTorrentQueue.add({
             torrentId: torrentEntity.id,

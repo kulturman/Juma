@@ -21,14 +21,13 @@ export class DownloadTorrentProcessor {
         const client = new WebTorrent();
         const baseDirectory = join(__dirname , '../');
         const userTorrentDirectory = `${baseDirectory}${job.data.userId}`;
+        const newTorrentDirectory = `${userTorrentDirectory}/${torrentEntity.id}/${torrentEntity.torrentName}`;
 
-        if (!fs.existsSync(userTorrentDirectory)) {
-            fs.mkdirSync(userTorrentDirectory);
-        }
+        fs.mkdirSync(newTorrentDirectory, { recursive: true });
 
         client.add(
             torrentEntity.path,
-            { path: userTorrentDirectory },
+            { path: newTorrentDirectory },
             torrent => {
                 let interval = setInterval(async () => {
                     torrentEntity.progression = torrent.progress * 100;

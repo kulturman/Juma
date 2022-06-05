@@ -12,9 +12,9 @@ export class TorrentService {
         private userRepository: UserRepository
     ) {}
 
-    async createNewTorrent(path: string, userId: number) {
+    async createNewTorrent(path: string, userId: number, torrentName: string) {
         const user = await this.userRepository.findOne({ id: userId });
-        const torrent = new Torrent(user, path);
+        const torrent = new Torrent(user, path, torrentName);
         await this.torrentRepository.save(torrent);
         return torrent;
     }
