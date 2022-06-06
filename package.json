@@ -37,7 +37,6 @@
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "mysql2": "^2.3.3",
-    "nestjs-i18n": "^9.0.13",
     "passport": "^0.5.3",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
