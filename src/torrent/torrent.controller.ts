@@ -1,19 +1,15 @@
 import { InjectQueue } from "@nestjs/bull";
 import { Controller, Post, Request, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Queue } from "bull";
 import { join } from "path";
-import { Repository } from "typeorm";
-import { Torrent } from "./entities/torrent.entity";
 import { TorrentService } from "./torrent.service";
 
 @Controller('torrents')
 export class TorrentController {
     constructor(
         private torrentService: TorrentService,
-        @InjectQueue('downloadTorrent') private downloadTorrentQueue: Queue ,
-        @InjectRepository(Torrent) private torrentRepository: Repository<Torrent>
+        @InjectQueue('downloadTorrent') private downloadTorrentQueue: Queue
     ) {}
 
     @Post()
