@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import connectionOptions from './ormconfig';
-import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { ConfigModule } from '@nestjs/config';
 import { TorrentModule } from './torrent/torrent.module';
 import { BullModule } from '@nestjs/bull';
+import { FileExplorerModule } from './file-explorer/file-explorer.module';
 
 
 @Module({
@@ -20,7 +19,8 @@ import { BullModule } from '@nestjs/bull';
         host: 'localhost',
         port: 6379
       }
-    })
+    }),
+    FileExplorerModule
   ],
   providers: [],
 })
