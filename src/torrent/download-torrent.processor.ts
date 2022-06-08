@@ -21,7 +21,7 @@ export class DownloadTorrentProcessor {
         const client = new WebTorrent();
         const baseDirectory = join(__dirname , '../');
         const userTorrentDirectory = `${baseDirectory}${job.data.userId}`;
-        const newTorrentDirectory = `${userTorrentDirectory}/${torrentEntity.id}/${torrentEntity.torrentName}`;
+        const newTorrentDirectory = `${userTorrentDirectory}/${torrentEntity.torrentName}`;
 
         fs.mkdirSync(newTorrentDirectory, { recursive: true });
 
@@ -37,8 +37,8 @@ export class DownloadTorrentProcessor {
                 torrent.on('done', async () => {
                     torrentEntity.progression = 100;
                     torrentEntity.status = TorrentStatus.COMPLETED;
-                    clearInterval(interval);
                     await repository.save(torrentEntity);
+                    clearInterval(interval);
                 })
             }
         );
