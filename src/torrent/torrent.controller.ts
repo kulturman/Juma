@@ -1,5 +1,5 @@
 import { InjectQueue } from "@nestjs/bull";
-import { Controller, Post, Request, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Post, Request, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Queue } from "bull";
 import { join } from "path";

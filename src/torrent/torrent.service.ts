@@ -1,14 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import path from "path/posix";
 import { UserRepository } from "src/auth/repositories/user.repository";
 import { Repository } from "typeorm";
 import { Torrent } from "./entities/torrent.entity";
+import { Directory } from "src/file-explorer/entities/directory.entity";
 
 @Injectable()
 export class TorrentService {
     constructor(
         @InjectRepository(Torrent) private torrentRepository: Repository<Torrent>,
+        @InjectRepository(Directory) private directoryRepository: Repository<Directory>,
         private userRepository: UserRepository
     ) {}
 

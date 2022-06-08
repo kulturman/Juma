@@ -36,6 +36,7 @@
     "@nestjs/typeorm": "^8.0.4",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
+    "directory-tree": "^3.3.0",
     "mysql2": "^2.3.3",
     "passport": "^0.5.3",
     "passport-jwt": "^4.0.0",
