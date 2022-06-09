@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Directory } from './entities/directory.entity';
+import { FileExplorerController } from './file-explorer.controller';
+import { FileExplorerService } from './file-explorer.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Directory])],
-    exports: [TypeOrmModule]
+    controllers: [FileExplorerController],
+    providers: [FileExplorerService]
 })
 export class FileExplorerModule {}

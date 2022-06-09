@@ -2,7 +2,6 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { FileExplorerModule } from 'src/file-explorer/file-explorer.module';
 import { DownloadTorrentProcessor } from './download-torrent.processor';
 import { Torrent } from './entities/torrent.entity';
 import { TorrentController } from './torrent.controller';
@@ -12,7 +11,6 @@ import { TorrentService } from './torrent.service';
     imports: [
         TypeOrmModule.forFeature([Torrent]),
         AuthModule,
-        FileExplorerModule,
         BullModule.registerQueue({
             name: 'downloadTorrent',
             settings: { maxStalledCount: 0 }
