@@ -10,11 +10,8 @@ export class FileExplorerController {
 
     @Get('folder/:folderPath?')
     getFolderContent(@Req() req, @Param('folderPath') folderPath) {
-        const directoryPath = join(__dirname, `../${req.user.id}`, folderPath ? folderPath: '');
-        
-        if (!fs.existsSync(directoryPath)) {
-            throw new NotFoundException('Directory does not exist');
-        }
-        return this.fileExplorerService.getFolderContent(directoryPath);
+        const basePath = join(__dirname, `../${req.user.id}`);
+
+        return this.fileExplorerService.getFolderContent(basePath, folderPath || '');
     }
 }
