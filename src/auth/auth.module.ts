@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { IsUniqueConstraint } from "src/helpers/validation/IsUnique";
+import { IsUniqueConstraint } from "../helpers/validation/IsUnique";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { UserRepository } from "./repositories/user.repository";

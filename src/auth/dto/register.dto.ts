@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { IsSame } from "src/helpers/validation/IsSame";
-import { IsUnique } from "src/helpers/validation/IsUnique";
+import { IsSame } from "../../helpers/validation/IsSame";
+import { IsUnique } from "../../helpers/validation/IsUnique";
 
 export class RegisterDto {
     @IsNotEmpty()
