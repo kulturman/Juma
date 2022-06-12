@@ -24,10 +24,13 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    migrations: [__dirname + '/../migration/*{.ts,.js}'],
-
+    entities: [
+        'dist/**/*.entity.js'
+    ],
+    migrations: [
+        'dist/migrations/*{.ts,.js}'
+    ],
     cli: {
-        migrationsDir: __dirname + '/../migrations'
+        migrationsDir: 'src/migrations'
     }
 }

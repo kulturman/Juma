@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/typeorm-migrations.config.ts",
-    "migration": "npm run typeorm migration:run",
+    "migration": "dotenv -e .env -- npm run typeorm migration:run",
+    "migration:test": "dotenv -e .env.test -- npm run typeorm migration:run",
     "migration:create": "npm run typeorm migration:create -- -n",
     "migration:generate": "npm run typeorm migration:generate -- -n",
     "migration:revert": "npm run typeorm migration:revert"
@@ -37,6 +38,8 @@
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "directory-tree": "^3.3.0",
+    "dotenv": "^16.0.1",
+    "dotenv-cli": "^5.1.0",
     "mysql2": "^2.3.3",
     "passport": "^0.5.3",
     "passport-jwt": "^4.0.0",
