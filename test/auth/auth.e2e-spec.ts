@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { cleanFixtures, loadFixtures } from '../../src/helpers/fixtures';
@@ -21,12 +21,17 @@ describe('AuthController (e2e)', () => {
     }).compile();
 
     app = module.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true
+      }),
+    );
     await app.init();
   });
 
   describe('GET /auth/login', () => {
     it('Should authenticate successfully', async () => {
-      const { body: data } = await request(app.getHttpServer())
+      const { body } = await request(app.getHttpServer())
         .post('/auth/login')
         .send({
           'email': 'arnaudbakyono@gmail.com',
@@ -34,7 +39,7 @@ describe('AuthController (e2e)', () => {
         })
         .expect(200);
   
-      expect(data).toMatchObject({
+      expect(body).toMatchObject({
         token: expect.any(String)
       })
   
@@ -45,6 +50,36 @@ describe('AuthController (e2e)', () => {
              .post('/auth/login')
              .send({ email: 'nonexistent@email.com' , password: 'fake'})
              .expect(401)
+    })
+  })
+
+  describe('POST /auth/register', () => {
+    it('Should register user if email is not used', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          "fullname": "Me",
+          "email": "arnaudbakyono@gmail.gz",
+          "password": "agathe",
+          "passwordConfirmation": "agathe"
+        })
+        .expect(201);
+
+      expect(body).toMatchObject({
+        "id": expect.any(String)
+      });
+    })
+
+    it('Should fail if email is already used', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/auth/register')
+        .send({
+          "fullname": "Me",
+          "email": "arnaudbakyono@gmail.com",
+          "password": "agathe",
+          "passwordConfirmation": "agathe"
+        })
+        .expect(400);
     })
   })
 
