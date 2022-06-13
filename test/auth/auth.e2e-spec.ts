@@ -2,9 +2,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
+import { cleanFixtures, loadFixtures } from '../../src/helpers/fixtures';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
+
+  beforeEach(async () => {
+    await loadFixtures();
+  })
+
+  afterEach(async () => {
+    await cleanFixtures();
+  })
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
