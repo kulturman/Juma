@@ -10,6 +10,12 @@ export class FileExplorerService {
         const directoryPath = `${basePath}/${directory}`;
         const videosFormats = ['.MP4', '.AVI', '.FLV', '.MKV', '.WEBM', '.MOV', '.WMV'];
         const audiosFormats = ['.MP3', '.WAV', '.M3U'];
+        const folders = [];
+        const files = [];
+
+        if (!fs.existsSync(basePath)) {
+            return { folders, files };
+        }
 
         if (!fs.existsSync(directoryPath)) {
             throw new NotFoundException('Directory does not exist');
@@ -18,8 +24,6 @@ export class FileExplorerService {
         const directoryContentAsJson = dirTree(
             directoryPath, {attributes: ['extension', 'size', 'type']}
         );
-        const folders = [];
-        const files = [];
 
         directoryContentAsJson.children.forEach(file => {
             if (file.type === 'directory') {
