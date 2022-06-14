@@ -1,6 +1,8 @@
 import { Builder, fixturesIterator, Loader, Parser, Resolver } from 'typeorm-fixtures-cli/dist';
 import * as path from 'path';
+import * as jwt from 'jsonwebtoken';
 import { getConnection, getRepository } from 'typeorm';
+import { UserJwtPayload } from '../../src/auth/user-jwt.payload';
 
 export const loadFixtures = async () => {
     const loader = new Loader();
@@ -26,4 +28,8 @@ export const cleanFixtures = async () => {
         const entity = await builder.build(fixture);
         await getRepository(entity.constructor.name).delete({});
     }
+}
+
+export const getToken = (id: string, email: string) => {
+    return jwt.sign({ id, email }, process.env.JWT_SECRET);
 }

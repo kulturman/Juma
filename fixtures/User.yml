@@ -1,6 +1,7 @@
 entity: User
 items:
   user1:
+    id: 1000
     fullname: 'Arnaud BAKYONO'
     email: 'arnaudbakyono@gmail.com'
     password: '$2b$10$91Wk5nVI5H.uV4wYnKk96uRFJaFf6cVxg7.pCWyuCT/e9KkI9OlX2'

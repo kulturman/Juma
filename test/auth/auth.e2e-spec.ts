@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { cleanFixtures, loadFixtures } from '../../src/helpers/fixtures';
+import { cleanFixtures, loadFixtures } from '../helpers';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
