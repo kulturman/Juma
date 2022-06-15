@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { RegisterDto } from "./dto/register.dto";
 import { User } from "./entities/user.entity";
 import { UserRepository } from "./repositories/user.repository";
-import * as bcrypt from 'bcrypt';
 import { UserJwtPayload } from "./user-jwt.payload";
 import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
         const user = new User();
         user.email = registerDto.email;
         user.fullname = registerDto.fullname;
-        user.password = await bcrypt.hash(registerDto.password, 10);
+        user.setPassword(registerDto.password);
         await this.userRepository.save(user);
         return user.id.toString();
     }
