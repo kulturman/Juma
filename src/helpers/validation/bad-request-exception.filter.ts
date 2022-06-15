@@ -24,6 +24,8 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
 
     response
       .status(status)
-      .json(data);
+      .json({
+        errors: data
+      });
   }
 }
