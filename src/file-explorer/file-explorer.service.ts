@@ -1,8 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
 import * as dirTree from 'directory-tree';
 import * as fs from 'fs';
-
-
+import * as path from "path";
 
 @Injectable()
 export class FileExplorerService {
@@ -45,5 +44,18 @@ export class FileExplorerService {
         })
 
         return { files, folders };
+    }
+
+    getFileAsStream(userId: string, filePath: string): { file: fs.ReadStream, fileName: string } {
+        const fullFilePath = `${process.env.TORRENTS_STORAGE_PATH}/${userId}/${filePath}`;
+
+        if (!fs.existsSync(fullFilePath)) {
+            throw new NotFoundException('File not found');
+        }
+
+        return {
+            file: fs.createReadStream(fullFilePath),
+            fileName: path.basename(filePath)
+        }
     }
 }

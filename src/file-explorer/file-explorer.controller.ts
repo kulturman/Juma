@@ -1,5 +1,4 @@
-import { Controller, ForbiddenException, Get, NotFoundException, Param, Req } from "@nestjs/common";
-import { join } from "path";
+import { Controller, ForbiddenException, Get, Param, Req, Res, StreamableFile } from "@nestjs/common";
 import { FileExplorerService } from "./file-explorer.service";
 
 @Controller('fs')
@@ -15,4 +14,15 @@ export class FileExplorerController {
         }
         return this.fileExplorerService.getFolderContent(basePath, folderPath || '');
     }
+
+    @Get('file/download/:filePath')
+    downloadFile(@Req() req, @Res({ passthrough: true }) res) {
+        const fileData = this.fileExplorerService.getFileAsStream(req.user.id, req.params.filePath);
+        
+        res.set({
+            'Content-Disposition': `attachment; filename="${fileData.fileName}"`,
+        });
+        return new StreamableFile(fileData.file);
+    }
 }
+
