@@ -19,8 +19,8 @@ export class DownloadTorrentProcessor {
         const repository = this.torrentRepository;
         await this.torrentRepository.save(torrentEntity);
         const client = new WebTorrent();
-        const baseDirectory = join(__dirname , '../');
-        const userTorrentDirectory = `${baseDirectory}${job.data.userId}`;
+        const baseDirectory = process.env.TORRENTS_STORAGE_PATH;
+        const userTorrentDirectory = `${baseDirectory}/${job.data.userId}`;
         const newTorrentDirectory = `${userTorrentDirectory}/${torrentEntity.torrentName}`;
 
         fs.mkdirSync(newTorrentDirectory, { recursive: true });

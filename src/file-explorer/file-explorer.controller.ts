@@ -8,7 +8,7 @@ export class FileExplorerController {
 
     @Get('folder/:folderPath?')
     getFolderContent(@Req() req, @Param('folderPath') folderPath: string) {
-        const basePath = join(__dirname, `../${req.user.id}`);
+        const basePath = `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}`;
 
         if (folderPath && folderPath.includes('..')) {
             throw new ForbiddenException('Nice try, cannot let you explore directories like that');
