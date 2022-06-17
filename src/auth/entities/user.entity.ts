@@ -25,6 +25,6 @@ export class User {
     updatedAt: Date;
 
     async setPassword(password: string) {
-        this.password = await bcrypt.hash(password, 10);
+        this.password = await bcrypt.hashSync(password, 10);
     }
 }
