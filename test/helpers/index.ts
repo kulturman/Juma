@@ -10,11 +10,14 @@ export const loadFixtures = async () => {
     const resolver = new Resolver();
     const fixtures = resolver.resolve(loader.fixtureConfigs);
     const builder = new Builder(getConnection(), new Parser());
+    const promises = [];
 
     for (const fixture of fixturesIterator(fixtures)) {
         const entity = await builder.build(fixture);
-        await getRepository(entity.constructor.name).save(entity);
+        promises.push(getRepository(entity.constructor.name).save(entity));
     }
+
+    await Promise.all(promises);
 }
 
 export const cleanFixtures = async () => {
@@ -23,11 +26,14 @@ export const cleanFixtures = async () => {
     const resolver = new Resolver();
     const fixtures = resolver.resolve(loader.fixtureConfigs);
     const builder = new Builder(getConnection(), new Parser());
+    const promises = [];
     
     for (const fixture of fixturesIterator(fixtures)) {
         const entity = await builder.build(fixture);
-        await getRepository(entity.constructor.name).delete({});
+        promises.push(getRepository(entity.constructor.name).delete({}));
     }
+
+    Promise.all(promises);
 }
 
 export const getToken = (id: string, email: string) => {
