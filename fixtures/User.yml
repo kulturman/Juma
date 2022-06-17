@@ -6,3 +6,9 @@ items:
     email: 'arnaudbakyono@gmail.com'
     __call:
       setPassword: 'agathe'
+  user2:
+    id: 2000
+    fullname: 'Arnaud GMAIL'
+    email: 'arnaud@gmail.com'
+    __call:
+      setPassword: 'agathe'
