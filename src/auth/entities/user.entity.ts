@@ -1,30 +1,41 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    fullname: string;
+  @Column()
+  fullname: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column({ unique: true})
-    email: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({ name: 'email_verified_at', nullable: true, default: null, type: 'timestamp'})
-    emailVerifiedAt: Date
+  @Column({
+    name: 'email_verified_at',
+    nullable: true,
+    default: null,
+    type: 'timestamp',
+  })
+  emailVerifiedAt: Date;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-    async setPassword(password: string) {
-        this.password = await bcrypt.hashSync(password, 10);
-    }
+  async setPassword(password: string) {
+    this.password = await bcrypt.hashSync(password, 10);
+  }
 }

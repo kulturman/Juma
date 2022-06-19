@@ -10,11 +10,11 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors) => new BadRequestException(errors),
-      transform: true
+      transform: true,
     }),
   );
   app.setGlobalPrefix('api');
-  app.useGlobalFilters(new BadRequestExceptionFilter())
+  app.useGlobalFilters(new BadRequestExceptionFilter());
   await app.listen(process.env.PORT);
 }
 bootstrap();

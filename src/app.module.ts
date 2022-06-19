@@ -7,7 +7,6 @@ import { BullModule } from '@nestjs/bull';
 import { FileExplorerModule } from './file-explorer/file-explorer.module';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
 
-
 @Module({
   imports: [
     AuthModule,
@@ -17,10 +16,10 @@ import { typeOrmAsyncConfig } from './config/typeorm.config';
     BullModule.forRoot({
       redis: {
         host: 'localhost',
-        port: 6379
-      }
+        port: 6379,
+      },
     }),
-    FileExplorerModule
+    FileExplorerModule,
   ],
   providers: [],
 })

@@ -8,15 +8,15 @@ import { TorrentController } from './torrent.controller';
 import { TorrentService } from './torrent.service';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Torrent]),
-        AuthModule,
-        BullModule.registerQueue({
-            name: 'downloadTorrent',
-            settings: { maxStalledCount: 0 }
-        })
-    ],
-    controllers: [TorrentController],
-    providers: [TorrentService, DownloadTorrentProcessor]
+  imports: [
+    TypeOrmModule.forFeature([Torrent]),
+    AuthModule,
+    BullModule.registerQueue({
+      name: 'downloadTorrent',
+      settings: { maxStalledCount: 0 },
+    }),
+  ],
+  controllers: [TorrentController],
+  providers: [TorrentService, DownloadTorrentProcessor],
 })
 export class TorrentModule {}
