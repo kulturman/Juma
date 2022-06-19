@@ -86,7 +86,7 @@ export class FileExplorerService {
     }
 
     if (fs.existsSync(newDirectoryPath)) {
-      throw new BadRequestException('Folder exists');
+      throw new BadRequestException('Folder already exists');
     }
 
     fs.mkdirSync(newDirectoryPath);

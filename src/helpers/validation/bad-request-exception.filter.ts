@@ -15,10 +15,14 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const errors = <{ message: [ValidationError] }>exception.getResponse();
 
+    if (!Array.isArray(errors)) {
+      return response.status(status).json(errors);
+    }
+
     const data = errors.message.map((error) => {
       return {
         field: error.property,
-        constraints: Object.keys(error.constraints).map((key, index) => {
+        constraints: Object.keys(error.constraints).map((key) => {
           return {
             constraint: key,
             message: error.constraints[key],
