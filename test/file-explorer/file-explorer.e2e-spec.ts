@@ -1,4 +1,4 @@
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { TestingModule, Test } from "@nestjs/testing";
 import * as request from 'supertest';
 import * as fs from 'fs';
@@ -30,7 +30,21 @@ describe('FileExplorer controller', () => {
     })
 
     describe('GET /fs/folder', () => {
-        const token = getToken('1000', 'arnaudbakyono@gmail.com');
+        const token = getToken('2000', 'arnaudbakyono@gmail.com');
+        const firstLevelDirectory = 'Nest Js course';
+        const videoFile = 'Introduction.mp4';
+        const pdfFile = 'Resources.pdf';
+        const baseDirectory = process.env.TORRENTS_STORAGE_PATH + "/2000";
+        
+        const createDirectories = () => {
+            fs.mkdirSync(
+                `${baseDirectory}/${firstLevelDirectory}`,
+                { recursive: true }
+            );
+
+            fs.closeSync(fs.openSync(`${baseDirectory}/${videoFile}`, 'w'));
+            fs.closeSync(fs.openSync(`${baseDirectory}/${firstLevelDirectory}/${pdfFile}`, 'w'));
+        }
 
         it('Should return empty files if user torrent directory do not exist', async () => {
             const { body } = await request(app.getHttpServer())
@@ -46,20 +60,6 @@ describe('FileExplorer controller', () => {
 
         describe('Return directory content when user torrent directory exists', () => {
             const token = getToken('2000', 'arnaudbakyono@gmail.com');
-            const firstLevelDirectory = 'Nest Js course';
-            const videoFile = 'Introduction.mp4';
-            const pdfFile = 'Resources.pdf';
-            const baseDirectory = process.env.TORRENTS_STORAGE_PATH + "/2000";
-
-            const createDirectories = () => {
-                fs.mkdirSync(
-                    `${baseDirectory}/${firstLevelDirectory}`,
-                    { recursive: true }
-                );
-    
-                fs.closeSync(fs.openSync(`${baseDirectory}/${videoFile}`, 'w'));
-                fs.closeSync(fs.openSync(`${baseDirectory}/${firstLevelDirectory}/${pdfFile}`, 'w'));
-            }
 
             it('Should return root directory content', async () => {
                 createDirectories();
@@ -114,6 +114,35 @@ describe('FileExplorer controller', () => {
     
                 fs.rmSync(baseDirectory, { recursive: true, force: true });
             })
+        })
+    })
+
+    describe('POST /fs/folder', () => {
+        const token = getToken('2000', 'arnaudbakyono@gmail.com');
+        const baseDirectory = process.env.TORRENTS_STORAGE_PATH + "/2000";
+        const createdDirectory = 'Mybad';
+
+        it('Should create new directory', async () => {
+            fs.mkdirSync(`${baseDirectory}`, { recursive: true });
+            await request(app.getHttpServer())
+                .post('/fs/folder')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ folderName: createdDirectory })
+                .expect(201);
+
+            expect(fs.existsSync(baseDirectory + '/' + createdDirectory)).toBeTruthy();
+            fs.rmSync(baseDirectory, { recursive: true, force: true });
+        })
+
+        it('Should fail to create directory if already exists', async () => {
+            fs.mkdirSync(`${baseDirectory}/${createdDirectory}`, { recursive: true });
+            await request(app.getHttpServer())
+                .post('/fs/folder')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ folderName: createdDirectory })
+                .expect(400);
+
+            fs.rmSync(baseDirectory, { recursive: true, force: true });
         })
     })
 })

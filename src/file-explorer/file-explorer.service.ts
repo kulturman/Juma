@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import * as dirTree from 'directory-tree';
 import * as fs from 'fs';
 import * as path from "path";
@@ -47,7 +47,7 @@ export class FileExplorerService {
     }
 
     getFileAsStream(userId: string, filePath: string): { file: fs.ReadStream, fileName: string } {
-        const fullFilePath = `${process.env.TORRENTS_STORAGE_PATH}/${userId}/${filePath}`;
+        const fullFilePath = `${this.getUserDIrectory(userId)}/${filePath}`;
 
         if (!fs.existsSync(fullFilePath)) {
             throw new NotFoundException('File not found');
@@ -57,5 +57,24 @@ export class FileExplorerService {
             file: fs.createReadStream(fullFilePath),
             fileName: path.basename(filePath)
         }
+    }
+
+    createDirectory(userId: string, directoryPath: string, directoryName: string) {
+        const basePath = `${this.getUserDIrectory(userId)}/${directoryPath}`;
+        const newDirectoryPath = `${basePath}/${directoryName}`
+
+        if (!fs.existsSync(basePath)) {
+            throw new NotFoundException('Path not found');
+        }
+
+        if (fs.existsSync(newDirectoryPath)) {
+            throw new BadRequestException('Folder exists');
+        }
+
+        fs.mkdirSync(newDirectoryPath);
+    }
+
+    private getUserDIrectory(userId: string) {
+        return `${process.env.TORRENTS_STORAGE_PATH}/${userId}`;
     }
 }

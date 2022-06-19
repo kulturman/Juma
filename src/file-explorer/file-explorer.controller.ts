@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, Param, Req, Res, StreamableFile } from "@nestjs/common";
+import { Body, Controller, ForbiddenException, Get, Param, Post, Req, Res, StreamableFile } from "@nestjs/common";
 import { FileExplorerService } from "./file-explorer.service";
 
 @Controller('fs')
@@ -15,6 +15,17 @@ export class FileExplorerController {
         return this.fileExplorerService.getFolderContent(basePath, folderPath || '');
     }
 
+    @Post('folder/:folderPath?')
+    createDirectory(@Req() req, @Body('folderName') folderName, @Param('folderPath') folderPath: string) {
+        folderPath = folderPath ? folderPath: '';
+        
+        if (folderPath.includes('..')) {
+            throw new ForbiddenException('Nice try, cannot let you explore directories like that');
+        }
+
+        this.fileExplorerService.createDirectory(req.user.id, folderPath, folderName);
+    }
+
     @Get('file/download/:filePath')
     downloadFile(@Req() req, @Res({ passthrough: true }) res) {
         const fileData = this.fileExplorerService.getFileAsStream(req.user.id, req.params.filePath);
@@ -24,5 +35,6 @@ export class FileExplorerController {
         });
         return new StreamableFile(fileData.file);
     }
+
 }
 
