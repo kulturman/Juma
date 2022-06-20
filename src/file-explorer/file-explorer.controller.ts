@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   ForbiddenException,
   Get,
   Param,
@@ -53,6 +54,11 @@ export class FileExplorerController {
 
   @Get('file/download/:filePath')
   downloadFile(@Req() req, @Res({ passthrough: true }) res) {
+    if (req.params.filePath.includes('..')) {
+      throw new ForbiddenException(
+        'Nice try, cannot let you explore directories like that',
+      );
+    }
     const fileData = this.fileExplorerService.getFileAsStream(
       req.user.id,
       req.params.filePath,
@@ -62,5 +68,15 @@ export class FileExplorerController {
       'Content-Disposition': `attachment; filename="${fileData.fileName}"`,
     });
     return new StreamableFile(fileData.file);
+  }
+
+  @Delete(':filePath')
+  deleteItem(@Req() req, @Param('filePath') filePath) {
+    if (filePath.includes('..')) {
+      throw new ForbiddenException(
+        'Nice try, cannot let you explore directories like that',
+      );
+    }
+    this.fileExplorerService.deleteItem(req.user.id, filePath);
   }
 }

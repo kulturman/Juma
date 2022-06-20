@@ -158,4 +158,49 @@ describe('FileExplorer controller', () => {
       fs.rmSync(baseDirectory, { recursive: true, force: true });
     });
   });
+
+  describe('DELETE /fs/', () => {
+    const token = getToken('2000', 'arnaudbakyono@gmail.com');
+    const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/2000';
+    const directoryToDelete = 'Mybad';
+    const fileToDelete = 'Mybad.txt';
+
+    it('Should delete the directory', async () => {
+      fs.mkdirSync(`${baseDirectory}/${directoryToDelete}`, {
+        recursive: true,
+      });
+
+      expect(
+        fs.existsSync(baseDirectory + '/' + directoryToDelete),
+      ).toBeTruthy();
+
+      await request(app.getHttpServer())
+        .delete(`/fs/${directoryToDelete}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(
+        fs.existsSync(baseDirectory + '/' + directoryToDelete),
+      ).toBeFalsy();
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+
+    it('Should delete the file', async () => {
+      fs.mkdirSync(`${baseDirectory}`, {
+        recursive: true,
+      });
+
+      fs.closeSync(fs.openSync(`${baseDirectory}/${fileToDelete}`, 'w'));
+
+      expect(fs.existsSync(`${baseDirectory}/${fileToDelete}`)).toBeTruthy();
+
+      await request(app.getHttpServer())
+        .delete(`/fs/${fileToDelete}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(fs.existsSync(`${baseDirectory}/${fileToDelete}`)).toBeFalsy();
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+  });
 });

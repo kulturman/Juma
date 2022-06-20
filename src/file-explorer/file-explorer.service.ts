@@ -92,6 +92,16 @@ export class FileExplorerService {
     fs.mkdirSync(newDirectoryPath);
   }
 
+  deleteItem(userId: string, filePath: string) {
+    const fullPath = `${this.getUserDIrectory(userId)}/${filePath}`;
+
+    if (!fs.existsSync(fullPath)) {
+      throw new BadRequestException('Item does not exist');
+    }
+
+    fs.rmSync(fullPath, { recursive: true, force: true });
+  }
+
   private getUserDIrectory(userId: string) {
     return `${process.env.TORRENTS_STORAGE_PATH}/${userId}`;
   }
