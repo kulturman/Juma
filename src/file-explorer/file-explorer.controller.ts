@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   Post,
@@ -20,11 +19,6 @@ export class FileExplorerController {
   getFolderContent(@Req() req, @Param('folderPath') folderPath: string) {
     const basePath = `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}`;
 
-    if (folderPath && folderPath.includes('..')) {
-      throw new ForbiddenException(
-        'Nice try, cannot let you explore directories like that',
-      );
-    }
     return this.fileExplorerService.getFolderContent(
       basePath,
       folderPath || '',
@@ -39,12 +33,6 @@ export class FileExplorerController {
   ) {
     folderPath = folderPath ? folderPath : '';
 
-    if (folderPath.includes('..')) {
-      throw new ForbiddenException(
-        'Nice try, cannot let you explore directories like that',
-      );
-    }
-
     this.fileExplorerService.createDirectory(
       req.user.id,
       folderPath,
@@ -54,11 +42,6 @@ export class FileExplorerController {
 
   @Get('file/download/:filePath')
   downloadFile(@Req() req, @Res({ passthrough: true }) res) {
-    if (req.params.filePath.includes('..')) {
-      throw new ForbiddenException(
-        'Nice try, cannot let you explore directories like that',
-      );
-    }
     const fileData = this.fileExplorerService.getFileAsStream(
       req.user.id,
       req.params.filePath,
@@ -72,11 +55,6 @@ export class FileExplorerController {
 
   @Delete(':filePath')
   deleteItem(@Req() req, @Param('filePath') filePath) {
-    if (filePath.includes('..')) {
-      throw new ForbiddenException(
-        'Nice try, cannot let you explore directories like that',
-      );
-    }
     this.fileExplorerService.deleteItem(req.user.id, filePath);
   }
 }
