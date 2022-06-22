@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Req,
@@ -56,5 +57,15 @@ export class FileExplorerController {
   @Delete(':filePath')
   deleteItem(@Req() req, @Param('filePath') filePath) {
     this.fileExplorerService.deleteItem(req.user.id, filePath);
+  }
+
+  @Post('rename/:filePath')
+  @HttpCode(200)
+  renameItem(@Req() req, @Body('newName') newName) {
+    this.fileExplorerService.renameItem(
+      req.user.id,
+      req.params.filePath,
+      newName,
+    );
   }
 }

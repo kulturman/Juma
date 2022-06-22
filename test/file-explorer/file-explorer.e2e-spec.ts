@@ -203,4 +203,38 @@ describe('FileExplorer controller', () => {
       fs.rmSync(baseDirectory, { recursive: true, force: true });
     });
   });
+
+  describe('POST /fs/rename/:filePath', () => {
+    const token = getToken('2000', 'arnaudbakyono@gmail.com');
+    const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/2000';
+    const directoryToRename = 'innerDirectory/Mybad';
+    const directoryNewName = 'NestJS';
+
+    it('Should rename the item (directory or file)', async () => {
+      fs.mkdirSync(`${baseDirectory}/${directoryToRename}`, {
+        recursive: true,
+      });
+
+      expect(
+        fs.existsSync(baseDirectory + '/' + directoryToRename),
+      ).toBeTruthy();
+
+      await request(app.getHttpServer())
+        //Encode the URL
+        .post(`/fs/rename/innerDirectory%2FMybad`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ newName: directoryNewName })
+        .expect(200);
+
+      expect(
+        fs.existsSync(baseDirectory + '/' + directoryToRename),
+      ).toBeFalsy();
+
+      expect(
+        fs.existsSync(baseDirectory + '/innerDirectory/' + directoryNewName),
+      ).toBeTruthy();
+
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+  });
 });

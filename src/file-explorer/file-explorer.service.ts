@@ -102,6 +102,25 @@ export class FileExplorerService {
     fs.rmSync(fullPath, { recursive: true, force: true });
   }
 
+  renameItem(userId: string, filePath: string, newName: string) {
+    const oldFileFullPath = `${this.getUserDIrectory(userId)}/${filePath}`;
+    //Get the directory basename as filePath can contain a full path
+    const oldFileName = path.basename(filePath);
+    const newFileFullPath = oldFileFullPath.replace(oldFileName, newName);
+
+    if (!fs.existsSync(oldFileFullPath)) {
+      throw new BadRequestException('Item does not exist');
+    }
+
+    if (fs.existsSync(newFileFullPath)) {
+      throw new BadRequestException(
+        'A file or directory of that name already exists',
+      );
+    }
+
+    fs.renameSync(oldFileFullPath, newFileFullPath);
+  }
+
   private getUserDIrectory(userId: string) {
     return `${process.env.TORRENTS_STORAGE_PATH}/${userId}`;
   }
