@@ -220,8 +220,7 @@ describe('FileExplorer controller', () => {
       ).toBeTruthy();
 
       await request(app.getHttpServer())
-        //Encode the URL
-        .post(`/fs/rename/innerDirectory%2FMybad`)
+        .post(`/fs/rename/${encodeURIComponent(directoryToRename)}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ newName: directoryNewName })
         .expect(200);
