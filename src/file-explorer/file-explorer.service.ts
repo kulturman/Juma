@@ -124,21 +124,25 @@ export class FileExplorerService {
   copyItem(userId: string, filePath: string, destination: string) {
     const oldFileFullPath = `${this.getUserDIrectory(userId)}/${filePath}`;
     const fileName = path.basename(oldFileFullPath);
-    const newFileFullPath = `${this.getUserDIrectory(
+    const destinationFileFullPath = `${this.getUserDIrectory(
       userId,
-    )}/${destination}/${fileName}`;
+    )}/${destination}`;
 
     if (!fs.existsSync(oldFileFullPath)) {
       throw new BadRequestException('Item does not exist');
     }
 
-    if (fs.existsSync(newFileFullPath)) {
+    if (!fs.existsSync(destinationFileFullPath)) {
+      throw new BadRequestException('destination directory does not exist');
+    }
+
+    if (fs.existsSync(`${destinationFileFullPath}/${fileName}`)) {
       throw new BadRequestException(
         'A file or directory of that name already exists',
       );
     }
 
-    fs.cpSync(oldFileFullPath, newFileFullPath);
+    fs.cpSync(oldFileFullPath, `${destinationFileFullPath}/${fileName}`);
   }
 
   private getUserDIrectory(userId: string) {
