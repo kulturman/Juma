@@ -121,6 +121,26 @@ export class FileExplorerService {
     fs.renameSync(oldFileFullPath, newFileFullPath);
   }
 
+  copyItem(userId: string, filePath: string, destination: string) {
+    const oldFileFullPath = `${this.getUserDIrectory(userId)}/${filePath}`;
+    const fileName = path.basename(oldFileFullPath);
+    const newFileFullPath = `${this.getUserDIrectory(
+      userId,
+    )}/${destination}/${fileName}`;
+
+    if (!fs.existsSync(oldFileFullPath)) {
+      throw new BadRequestException('Item does not exist');
+    }
+
+    if (fs.existsSync(newFileFullPath)) {
+      throw new BadRequestException(
+        'A file or directory of that name already exists',
+      );
+    }
+
+    fs.cpSync(oldFileFullPath, newFileFullPath);
+  }
+
   private getUserDIrectory(userId: string) {
     return `${process.env.TORRENTS_STORAGE_PATH}/${userId}`;
   }

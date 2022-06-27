@@ -68,4 +68,14 @@ export class FileExplorerController {
       newName,
     );
   }
+
+  @Post('copy/:filePath')
+  @HttpCode(200)
+  copyItem(@Req() req, @Body('destination') destination) {
+    this.fileExplorerService.copyItem(
+      req.user.id,
+      req.params.filePath,
+      destination,
+    );
+  }
 }

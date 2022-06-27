@@ -236,4 +236,34 @@ describe('FileExplorer controller', () => {
       fs.rmSync(baseDirectory, { recursive: true, force: true });
     });
   });
+
+  describe('POST /fs/copy/:filePath', () => {
+    const token = getToken('2000', 'arnaudbakyono@gmail.com');
+    const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/2000';
+    const fileToCopy = 'test.txt';
+
+    it('Should copy the file', async () => {
+      fs.mkdirSync(`${baseDirectory}/d1`, {
+        recursive: true,
+      });
+
+      fs.closeSync(fs.openSync(`${baseDirectory}/${fileToCopy}`, 'w'));
+
+      expect(fs.existsSync(`${baseDirectory}/${fileToCopy}`)).toBeTruthy();
+
+      expect(!fs.existsSync(baseDirectory + '/d1/' + fileToCopy)).toBeTruthy();
+
+      const d = await request(app.getHttpServer())
+        .post(`/fs/copy/${encodeURIComponent(fileToCopy)}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ destination: 'd1' })
+        .expect(200);
+
+      expect(fs.existsSync(`${baseDirectory}/${fileToCopy}`)).toBeTruthy();
+
+      expect(fs.existsSync(baseDirectory + '/d1/' + fileToCopy)).toBeTruthy();
+
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+  });
 });
