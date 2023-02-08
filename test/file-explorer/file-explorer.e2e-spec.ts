@@ -253,7 +253,7 @@ describe('FileExplorer controller', () => {
 
       expect(!fs.existsSync(baseDirectory + '/d1/' + fileToCopy)).toBeTruthy();
 
-      const d = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post(`/fs/copy/${encodeURIComponent(fileToCopy)}`)
         .set('Authorization', `Bearer ${token}`)
         .send({ destination: 'd1' })
