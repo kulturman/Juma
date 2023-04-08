@@ -21,12 +21,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/typeorm-migrations.config.ts",
     "migration": "dotenv -e .env -- npm run typeorm migration:run",
-    "migration:test": "dotenv -e .env.test -- npm run typeorm migration:run",
+    "migration:test": "npm run create:db-test && dotenv -e .env.test -- npm run typeorm migration:run",
     "migration:create": "npm run typeorm migration:create -- -n",
     "migration:generate": "npm run typeorm migration:generate -- -n",
     "migration:revert": "npm run typeorm migration:revert",
     "fixtures": "dotenv -e .env -- fixtures ./fixtures --config ./dist/config/typeorm-migrations.config.js",
     "fixtures:test": "dotenv -e .env.test -- fixtures ./fixtures --config ./dist/config/typeorm-migrations.config.js",
+    "create:db-test": "docker exec -it juma-mysql mysql -u root -pjuma -e \"CREATE SCHEMA IF NOT EXISTS jumatest\"",
     "dev": "concurrently \"npm run start:dev\" \"npm start --prefix frontend\" "
   },
   "dependencies": {
