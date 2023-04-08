@@ -6,8 +6,4 @@ export class UserRepository extends Repository<User> {
   constructor() {
     super();
   }
-
-  async findD() {
-    return await super.find();
-  }
 }

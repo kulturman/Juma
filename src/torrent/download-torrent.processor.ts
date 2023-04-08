@@ -1,7 +1,6 @@
 import { Process, Processor } from '@nestjs/bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
-import { join } from 'path';
 import { Repository } from 'typeorm';
 import { Torrent } from './entities/torrent.entity';
 import { TorrentStatus } from './torrent-status.enum';
@@ -31,7 +30,7 @@ export class DownloadTorrentProcessor {
     fs.mkdirSync(newTorrentDirectory, { recursive: true });
 
     client.add(torrentEntity.path, { path: newTorrentDirectory }, (torrent) => {
-      let interval = setInterval(async () => {
+      const interval = setInterval(async () => {
         torrentEntity.progression = torrent.progress * 100;
         await repository.save(torrentEntity);
       }, 5000);
