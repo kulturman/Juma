@@ -3,16 +3,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { IsUniqueConstraint } from '../helpers/validation/IsUnique';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserRepository } from './repositories/user.repository';
 import { LocalStrategy } from './strategies/local.strategy';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { User } from './entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository]), JwtModule.register({})],
+  imports: [JwtModule.register({}), TypeOrmModule.forFeature([User])],
   exports: [TypeOrmModule],
   controllers: [AuthController],
   providers: [

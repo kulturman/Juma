@@ -1,7 +1,6 @@
 import { InjectQueue } from '@nestjs/bull';
 import {
   Controller,
-  Get,
   Post,
   Request,
   UploadedFile,

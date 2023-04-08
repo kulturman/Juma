@@ -1,15 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './entities/user.entity';
-import { UserRepository } from './repositories/user.repository';
 import { UserJwtPayload } from './user-jwt.payload';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 

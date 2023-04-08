@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from '../auth/repositories/user.repository';
+import { User } from 'src/auth/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Torrent } from './entities/torrent.entity';
 
@@ -9,7 +9,8 @@ export class TorrentService {
   constructor(
     @InjectRepository(Torrent)
     private torrentRepository: Repository<Torrent>,
-    private userRepository: UserRepository,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async createNewTorrent(path: string, userId: number, torrentName: string) {
