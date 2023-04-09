@@ -9,6 +9,11 @@ services:
       - mysqldata:/var/lib/mysql
     ports:
       - "3333:3306"
+  redis:
+    image: redis
+    container_name: juma-redis
+    ports:
+      - "6379:6379"
 
 volumes:
   mysqldata:

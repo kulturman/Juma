@@ -8,7 +8,6 @@ import {
 import * as path from 'path';
 import * as jwt from 'jsonwebtoken';
 import { getConnection, getRepository } from 'typeorm';
-import { UserJwtPayload } from '../../src/auth/user-jwt.payload';
 
 export const loadFixtures = async () => {
   const loader = new Loader();

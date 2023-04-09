@@ -70,7 +70,7 @@ describe('AuthController (e2e)', () => {
     });
 
     it('Should fail if email is already used', async () => {
-      const { body } = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .post('/auth/register')
         .send({
           fullname: 'Me',
