@@ -23,5 +23,8 @@ services:
     depends_on:
       - mysql
       - redis
+    volumes:
+      - /app/node_modules
+      - .:/app
 volumes:
   mysqldata:

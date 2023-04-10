@@ -36,3 +36,4 @@ lerna-debug.log*
 
 .env
 src/ormconfig.ts
+juma-data
