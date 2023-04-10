@@ -15,6 +15,6 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new BadRequestExceptionFilter());
-  await app.listen(process.env.PORT);
+  await app.listen(5000);
 }
 bootstrap();

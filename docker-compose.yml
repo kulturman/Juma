@@ -14,6 +14,14 @@ services:
     container_name: juma-redis
     ports:
       - "6379:6379"
-
+  backend:
+    build:
+      context: .
+    container_name: juma-backend
+    ports:
+      - 5000:5000
+    depends_on:
+      - mysql
+      - redis
 volumes:
   mysqldata:
