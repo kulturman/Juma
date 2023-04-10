@@ -15,7 +15,7 @@ import { typeOrmAsyncConfig } from './config/typeorm.config';
     ConfigModule.forRoot(),
     BullModule.forRoot({
       redis: {
-        host: 'redis',
+        host: 'localhost',
         port: 6379,
       },
     }),

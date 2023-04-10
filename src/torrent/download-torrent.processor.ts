@@ -26,7 +26,6 @@ export class DownloadTorrentProcessor {
     const baseDirectory = process.env.TORRENTS_STORAGE_PATH;
     const userTorrentDirectory = `${baseDirectory}/${job.data.userId}`;
     const newTorrentDirectory = `${userTorrentDirectory}/${torrentEntity.torrentName}`;
-
     fs.mkdirSync(newTorrentDirectory, { recursive: true });
 
     client.add(torrentEntity.path, { path: newTorrentDirectory }, (torrent) => {
