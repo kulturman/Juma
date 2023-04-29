@@ -18,10 +18,6 @@ export class FileSystemStorageGateway implements FileStorageGateway {
       attributes: ['extension', 'size', 'type'],
     });
 
-    directoryContentAsJson.children.forEach((file) => {
-      file;
-    });
-
     return Promise.resolve({
       children: directoryContentAsJson.children.map((item) => {
         return {
