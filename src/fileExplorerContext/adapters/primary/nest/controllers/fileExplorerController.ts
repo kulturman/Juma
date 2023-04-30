@@ -1,9 +1,11 @@
 import { Controller, Get, Param, Req } from '@nestjs/common';
-import { RetrieFolderContent } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/retrieveFolderContent';
+import { RetrieveFolderContent } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/retrieveFolderContent';
 
 @Controller('fs')
 export class FileExplorerController {
-  constructor(private readonly retrieveDirectoryContent: RetrieFolderContent) {}
+  constructor(
+    private readonly retrieveDirectoryContent: RetrieveFolderContent,
+  ) {}
 
   @Get('folder/:folderPath?')
   getFolderContent(@Req() req, @Param('folderPath') folderPath: string) {

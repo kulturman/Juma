@@ -1,9 +1,10 @@
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
+import { NotFoundException } from 'src/shared/hexagon/exceptions/notFoundException';
 import { DirectoryContentDetails, DirectoryItemType } from './DirectoryContent';
 import { videosFormats, audiosFormats } from './mediaTypes';
 
-export class RetrieFolderContent {
+export class RetrieveFolderContent {
   constructor(
     @Inject('FileStorageGateway')
     private readonly fileStorageGateway: FileStorageGateway,
