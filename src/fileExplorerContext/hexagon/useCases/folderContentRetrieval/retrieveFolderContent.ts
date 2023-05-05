@@ -1,8 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
-import { NotFoundException } from 'src/shared/hexagon/exceptions/notFoundException';
-import { DirectoryContentDetails, DirectoryItemType } from './DirectoryContent';
-import { videosFormats, audiosFormats } from './mediaTypes';
+import { DirectoryContent, DirectoryContentDetails } from './DirectoryContent';
 
 export class RetrieveFolderContent {
   constructor(
@@ -15,8 +13,31 @@ export class RetrieveFolderContent {
     directory: string,
   ): Promise<DirectoryContentDetails> {
     const directoryPath = `${basePath}/${directory}`;
+    const directoryContent: DirectoryContent =
+      await this.fileStorageGateway.getDirectoryContent(directoryPath);
 
-    if (!(await this.fileStorageGateway.fileExists(basePath))) {
+    if (directoryContent.children.length === 0)
+      return {
+        folders: [],
+        files: [],
+      };
+
+    const files = directoryContent.children.map((file) => ({
+      name: file.name,
+      path: file.path,
+      size: file.size,
+    }));
+
+    return {
+      folders: [],
+      files: files.map((file) => ({
+        ...file,
+        isVideo: false,
+        isAudio: false,
+      })),
+    };
+
+    /*if (!(await this.fileStorageGateway.fileExists(basePath))) {
       return { folders: [], files: [] };
     }
 
@@ -62,6 +83,6 @@ export class RetrieveFolderContent {
         }
       },
       { folders: [], files: [] },
-    );
+    );*/
   }
 }
