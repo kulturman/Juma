@@ -1,55 +1,43 @@
-import { Inject } from '@nestjs/common';
 import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
-import { DirectoryContent, DirectoryContentDetails } from './DirectoryContent';
+import {
+  DirectoryContent,
+  DirectoryContentDetails,
+  DirectoryItemType,
+} from './DirectoryContent';
+import { audiosFormats, videosFormats } from './mediaTypes';
+import { NotFoundException } from '@nestjs/common';
 
 export class RetrieveFolderContent {
-  constructor(
-    @Inject('FileStorageGateway')
-    private readonly fileStorageGateway: FileStorageGateway,
-  ) {}
+  constructor(private readonly fileStorageGateway: FileStorageGateway) {}
 
   async handle(
     basePath: string,
     directory: string,
   ): Promise<DirectoryContentDetails> {
     const directoryPath = `${basePath}/${directory}`;
-    const directoryContent: DirectoryContent =
-      await this.fileStorageGateway.getDirectoryContent(directoryPath);
 
-    if (directoryContent.children.length === 0)
-      return {
-        folders: [],
-        files: [],
-      };
-
-    const files = directoryContent.children.map((file) => ({
-      name: file.name,
-      path: file.path,
-      size: file.size,
-    }));
-
-    return {
-      folders: [],
-      files: files.map((file) => ({
-        ...file,
-        isVideo: false,
-        isAudio: false,
-      })),
-    };
-
-    /*if (!(await this.fileStorageGateway.fileExists(basePath))) {
+    if (!(await this.fileStorageGateway.fileExists(basePath))) {
       return { folders: [], files: [] };
     }
 
+    const directoryContent: DirectoryContent =
+      await this.fileStorageGateway.getDirectoryContent(directoryPath);
     if (!(await this.fileStorageGateway.fileExists(directoryPath))) {
       throw new NotFoundException('Directory does not exist');
     }
 
-    const directoryContent = await this.fileStorageGateway.getDirectoryContent(
-      directoryPath,
+    if (directoryContent.children.length === 0) {
+      return {
+        folders: [],
+        files: [],
+      };
+    }
+
+    const directoryItems = directoryContent.children.sort((a, b) =>
+      a.name.localeCompare(b.name),
     );
 
-    return directoryContent.children.reduce(
+    return directoryItems.reduce(
       (acc, folderItem) => {
         const accumulatedFolders = acc.folders;
         const accumulatedFiles = acc.files;
@@ -83,6 +71,6 @@ export class RetrieveFolderContent {
         }
       },
       { folders: [], files: [] },
-    );*/
+    );
   }
 }

@@ -2,21 +2,24 @@ import { RetrieveFolderContent } from './retrieveFolderContent';
 import {
   DirectoryContent,
   DirectoryContentDetails,
+  DirectoryEntity,
   DirectoryItemType,
 } from './directoryContent';
-import { FileStorageGateway } from './gateways/fileStorageGateway';
+import * as path from 'path';
+import * as _ from 'lodash';
+import { NotFoundException } from '../../../../shared/hexagon/exceptions/notFoundException';
+import { FileStorageGatewayStub } from './FileStorageGatewayStub';
 
 describe('Folder content retrieval', () => {
-  const basePath = 'basePath';
+  const basePath = '/home/kulturman/1';
   const directoryPath = 'directoryPath';
-  const absolutePath = basePath + '/' + directoryPath;
   let fileStorageGateway: FileStorageGatewayStub;
 
   beforeEach(() => {
     fileStorageGateway = new FileStorageGatewayStub();
   });
 
-  it(' should retrieve nothing if the directory content is empty', async () => {
+  it('Should retrieve nothing if base directory does not exist', async () => {
     expectDirectoryContentDetails(
       await retrieveDirectoryContent(basePath, directoryPath),
       {
@@ -26,58 +29,63 @@ describe('Folder content retrieval', () => {
     );
   });
 
-  describe('Single file in the directory', () => {
-    beforeEach(() => {
-      initDirectoryContent(aFile);
-    });
-
-    it(' should retrieve that single file', async () => {
-      expectDirectoryContentDetails(
-        await retrieveDirectoryContent(basePath, directoryPath),
-        {
-          folders: [],
-          files: [
-            {
-              name: 'my-poetry.txt',
-              path: absolutePath + '/my-poetry.txt',
-              size: 3,
-              isVideo: false,
-              isAudio: false,
-            },
-          ],
-        },
-      );
-    });
+  it('It should raise an exception if directory path does not exist', async () => {
+    initExistingDirectories(basePath);
+    await expect(async () =>
+      retrieveDirectoryContent(basePath, directoryPath),
+    ).rejects.toThrow('Directory does not exist');
   });
 
-  describe('Two files in the directory', () => {
+  describe('Retrieve files and folders in the directory', () => {
     beforeEach(() => {
-      const anotherFile = {
-        ...aFile,
-        name: 'another-poetry.txt',
-        path: absolutePath + '/another-poetry.txt',
-      };
-      initDirectoryContent(aFile, anotherFile);
+      const file = createFile('my-poetry.txt', 300);
+      const anotherFile = createFile('another-poetry.txt', 30);
+      initDirectoryContent(file, anotherFile);
+      initExistingDirectories(basePath, basePath + '/' + directoryPath);
     });
 
-    it(' should retrieve both files', async () => {
+    it('Should retrieve two files (non audio or video) and one video and one audio and two folders', async () => {
+      const audioFile = createFile('music.mp3', 200);
+      const videoFIle = createFile('video.mp4', 200);
+      const folder = createFolder('folder', 100);
+      const anotherFolder = createFolder('anotherFolder', 200);
+
+      fileStorageGateway.addItems(audioFile, videoFIle, folder, anotherFolder);
+
       expectDirectoryContentDetails(
         await retrieveDirectoryContent(basePath, directoryPath),
         {
-          folders: [],
+          folders: [
+            { ..._.omit(anotherFolder, ['type']) },
+            { ..._.omit(folder, ['type']) },
+          ],
           files: [
-            {
-              name: 'my-poetry.txt',
-              path: absolutePath + '/my-poetry.txt',
-              size: 3,
-              isVideo: false,
-              isAudio: false,
-            },
             {
               name: 'another-poetry.txt',
-              path: absolutePath + '/another-poetry.txt',
-              size: 3,
+              path: directoryPath + '/another-poetry.txt',
+              size: 30,
               isVideo: false,
+              isAudio: false,
+            },
+            {
+              name: 'music.mp3',
+              size: 200,
+              path: 'directoryPath/music.mp3',
+              isVideo: false,
+              isAudio: true,
+            },
+            {
+              name: 'my-poetry.txt',
+              path: directoryPath + '/my-poetry.txt',
+              size: 300,
+              isVideo: false,
+              isAudio: false,
+            },
+            {
+              name: 'video.mp4',
+              size: 200,
+              path: 'directoryPath/video.mp4',
+              isVideo: true,
               isAudio: false,
             },
           ],
@@ -86,18 +94,46 @@ describe('Folder content retrieval', () => {
     });
   });
 
-  const retrieveDirectoryContent = (basePath: string, directoryPath: string) =>
-    new RetrieveFolderContent(fileStorageGateway).handle(
+  const createFile = (fileName: string, size: number): DirectoryEntity => {
+    return {
+      type: DirectoryItemType.FILE,
+      size,
+      name: fileName,
+      extension: path.extname(fileName),
+      path: directoryPath + '/' + fileName,
+    };
+  };
+
+  const createFolder = (folderName: string, size: number): DirectoryEntity => {
+    return {
+      type: DirectoryItemType.FOLDER,
+      size,
+      name: folderName,
+      path: directoryPath + '/' + folderName,
+    };
+  };
+
+  const retrieveDirectoryContent = (
+    basePath: string,
+    directoryPath: string,
+  ) => {
+    return new RetrieveFolderContent(fileStorageGateway).handle(
       basePath,
       directoryPath,
     );
+  };
 
   const initDirectoryContent = (
     ...directoryContentChildren: DirectoryContent['children']
-  ) =>
-    (fileStorageGateway.directoryContent = {
+  ) => {
+    return (fileStorageGateway.directoryContent = {
       children: directoryContentChildren,
     });
+  };
+
+  const initExistingDirectories = (...items: string[]) => {
+    fileStorageGateway.existingDirectoryItems = items;
+  };
 
   const expectDirectoryContentDetails = (
     actualDirectoryContentDetails: DirectoryContentDetails,
@@ -106,28 +142,4 @@ describe('Folder content retrieval', () => {
     expect(actualDirectoryContentDetails).toEqual<DirectoryContentDetails>(
       expectedDirectoryContentDetails,
     );
-
-  const aFile = {
-    name: 'my-poetry.txt',
-    path: absolutePath + '/my-poetry.txt',
-    size: 3,
-    type: DirectoryItemType.FILE,
-    extension: '.txt',
-  };
 });
-
-class FileStorageGatewayStub implements FileStorageGateway {
-  private _directoryContent: DirectoryContent = { children: [] };
-
-  async getDirectoryContent(path: string): Promise<DirectoryContent> {
-    return this._directoryContent;
-  }
-
-  async fileExists(path: string): Promise<boolean> {
-    return false;
-  }
-
-  set directoryContent(value: DirectoryContent) {
-    this._directoryContent = value;
-  }
-}

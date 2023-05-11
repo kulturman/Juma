@@ -3,4 +3,5 @@ import { DirectoryContent } from 'src/fileExplorerContext/hexagon/useCases/folde
 export interface FileStorageGateway {
   fileExists(path: string): Promise<boolean>;
   getDirectoryContent(path: string): Promise<DirectoryContent>;
+  createFolder(filePath: string): void;
 }

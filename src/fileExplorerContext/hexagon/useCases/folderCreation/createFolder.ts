@@ -17,7 +17,7 @@ export class CreateFolder {
     if (await this.fileStorageGatway.fileExists(newDirectoryPath)) {
       throw new BadRequestException('Folder already exists');
     }
-    this.fileStorageGatway.createFolder(newDirectoryPath);
+    await this.fileStorageGatway.createFolder(newDirectoryPath);
   }
 }
 

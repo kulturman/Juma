@@ -18,7 +18,7 @@ type PartialDirectoryEntity = {
   size: number;
 };
 
-type DirectoryEntity = File | Folder;
+export type DirectoryEntity = File | Folder;
 
 export interface DirectoryContent {
   children: DirectoryEntity[];
