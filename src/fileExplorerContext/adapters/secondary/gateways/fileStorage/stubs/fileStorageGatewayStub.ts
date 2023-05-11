@@ -1,5 +1,8 @@
-import { DirectoryContent, DirectoryEntity } from './directoryContent';
-import { FileStorageGateway } from './gateways/fileStorageGateway';
+import {
+  DirectoryContent,
+  DirectoryEntity,
+} from '../../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
+import { FileStorageGateway } from '../../../../../hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
 
 export class FileStorageGatewayStub implements FileStorageGateway {
   private _directoryContent: DirectoryContent = { children: [] };
@@ -20,5 +23,7 @@ export class FileStorageGatewayStub implements FileStorageGateway {
   addItems(...items: DirectoryEntity[]) {
     this._directoryContent.children.push(...items);
   }
-  createFolder(filePath: string): void {}
+  createFolder(filePath: string): void {
+    this.existingDirectoryItems.push(filePath);
+  }
 }

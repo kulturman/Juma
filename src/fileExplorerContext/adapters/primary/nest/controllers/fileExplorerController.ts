@@ -21,10 +21,12 @@ export class FileExplorerController {
     @Body('folderName') folderName,
     @Param('folderPath') folderPath: string,
   ) {
+    const basePath =
+      `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}` as string;
     folderPath = folderPath ? folderPath : '';
 
     await this.createFolder.handle({
-      userId: req.user.id as number,
+      basePath,
       path: folderPath,
       folderName,
     });

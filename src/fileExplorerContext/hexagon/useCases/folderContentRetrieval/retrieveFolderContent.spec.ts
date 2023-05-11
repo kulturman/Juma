@@ -7,8 +7,7 @@ import {
 } from './directoryContent';
 import * as path from 'path';
 import * as _ from 'lodash';
-import { NotFoundException } from '../../../../shared/hexagon/exceptions/notFoundException';
-import { FileStorageGatewayStub } from './FileStorageGatewayStub';
+import { FileStorageGatewayStub } from '../../../adapters/secondary/gateways/fileStorage/stubs/fileStorageGatewayStub';
 
 describe('Folder content retrieval', () => {
   const basePath = '/home/kulturman/1';

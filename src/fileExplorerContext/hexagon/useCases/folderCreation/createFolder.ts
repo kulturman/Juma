@@ -1,28 +1,31 @@
-import { BadRequestException, Inject, NotFoundException } from '@nestjs/common';
 import { FileStorageGateway } from '../folderContentRetrieval/gateways/fileStorageGateway';
+import { NotFoundException } from '../../../../shared/hexagon/exceptions/notFoundException';
+import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
 
 export class CreateFolder {
-  constructor(
-    @Inject('FileStorageGateway') private fileStorageGatway: FileStorageGateway,
-  ) {}
+  constructor(private fileStorageGatway: FileStorageGateway) {}
 
   async handle(command: CreateFolderCommand) {
-    const basePath = `${process.env.TORRENTS_STORAGE_PATH}/${command.userId}/${command.path}`;
-    const newDirectoryPath = `${basePath}/${command.folderName}`;
+    const basePath = `${command.basePath}${command.path !== '' ? '/' : ''}${
+      command.path
+    }`;
 
     if (!(await this.fileStorageGatway.fileExists(basePath))) {
       throw new NotFoundException('Path not found');
     }
 
+    const newDirectoryPath = `${basePath}/${command.folderName}`;
+
     if (await this.fileStorageGatway.fileExists(newDirectoryPath)) {
-      throw new BadRequestException('Folder already exists');
+      throw new BadRequestException('Directory already exists');
     }
+
     await this.fileStorageGatway.createFolder(newDirectoryPath);
   }
 }
 
 export interface CreateFolderCommand {
-  userId: number;
+  basePath: string;
   path: string;
   folderName: string;
 }
