@@ -5,6 +5,7 @@ services:
     container_name: 'juma-mysql'
     env_file:
       - .env
+      - .env.test
     volumes:
       - mysqldata:/var/lib/mysql
       - ./my.conf:/etc/mysql/my.cnf

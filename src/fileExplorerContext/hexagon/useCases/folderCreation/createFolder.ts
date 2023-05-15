@@ -1,4 +1,4 @@
-import { FileStorageGateway } from '../folderContentRetrieval/gateways/fileStorageGateway';
+import { FileStorageGateway } from '../../gateways/fileStorageGateway';
 import { NotFoundException } from '../../../../shared/hexagon/exceptions/notFoundException';
 import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
 

@@ -2,7 +2,7 @@ import {
   DirectoryContent,
   DirectoryEntity,
 } from '../../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
-import { FileStorageGateway } from '../../../../../hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
+import { FileStorageGateway } from '../../../../../hexagon/gateways/fileStorageGateway';
 
 export class FileStorageGatewayStub implements FileStorageGateway {
   private _directoryContent: DirectoryContent = { children: [] };
@@ -25,5 +25,9 @@ export class FileStorageGatewayStub implements FileStorageGateway {
   }
   createFolder(filePath: string): void {
     this.existingDirectoryItems.push(filePath);
+  }
+
+  copy(source: string, destination: string): void {
+    this.existingDirectoryItems.push(destination);
   }
 }

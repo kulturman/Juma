@@ -1,4 +1,3 @@
-import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/useCases/folderContentRetrieval/gateways/fileStorageGateway';
 import {
   DirectoryContent,
   DirectoryContentDetails,
@@ -6,6 +5,7 @@ import {
 } from './DirectoryContent';
 import { audiosFormats, videosFormats } from './mediaTypes';
 import { NotFoundException } from '@nestjs/common';
+import { FileStorageGateway } from '../../gateways/fileStorageGateway';
 
 export class RetrieveFolderContent {
   constructor(private readonly fileStorageGateway: FileStorageGateway) {}
@@ -15,7 +15,6 @@ export class RetrieveFolderContent {
     directory: string,
   ): Promise<DirectoryContentDetails> {
     const directoryPath = `${basePath}/${directory}`;
-
     if (!(await this.fileStorageGateway.fileExists(basePath))) {
       return { folders: [], files: [] };
     }
