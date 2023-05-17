@@ -6,6 +6,8 @@ import { FileStorageGateway } from '../../../hexagon/gateways/fileStorageGateway
 import { CreateFolder } from '../../../hexagon/useCases/folderCreation/createFolder';
 import { RetrieveFolderContent } from '../../../hexagon/useCases/folderContentRetrieval/retrieveFolderContent';
 import { CopyFile } from '../../../hexagon/useCases/folderCopying/copyFile';
+import { DeleteFile } from '../../../hexagon/useCases/folderDeletion/deleteFile';
+import { DownloadFile } from '../../../hexagon/useCases/fileDownloading/downloadFile';
 
 @Module({
   controllers: [FileExplorerController],
@@ -14,6 +16,20 @@ import { CopyFile } from '../../../hexagon/useCases/folderCopying/copyFile';
       provide: CreateFolder,
       useFactory: (fileStorageGateway: FileStorageGateway) => {
         return new CreateFolder(fileStorageGateway);
+      },
+      inject: ['FileStorageGateway'],
+    },
+    {
+      provide: DownloadFile,
+      useFactory: (fileStorageGateway: FileStorageGateway) => {
+        return new DownloadFile(fileStorageGateway);
+      },
+      inject: ['FileStorageGateway'],
+    },
+    {
+      provide: DeleteFile,
+      useFactory: (fileStorageGateway: FileStorageGateway) => {
+        return new DeleteFile(fileStorageGateway);
       },
       inject: ['FileStorageGateway'],
     },

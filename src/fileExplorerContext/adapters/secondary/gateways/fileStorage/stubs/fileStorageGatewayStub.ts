@@ -3,6 +3,7 @@ import {
   DirectoryEntity,
 } from '../../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
 import { FileStorageGateway } from '../../../../../hexagon/gateways/fileStorageGateway';
+import fs from 'fs';
 
 export class FileStorageGatewayStub implements FileStorageGateway {
   private _directoryContent: DirectoryContent = { children: [] };
@@ -29,5 +30,27 @@ export class FileStorageGatewayStub implements FileStorageGateway {
 
   copy(source: string, destination: string): void {
     this.existingDirectoryItems.push(destination);
+  }
+
+  getBasePath(id: number) {
+    return `/home/${id}`;
+  }
+
+  createBasePath(id: number) {
+    this.existingDirectoryItems.push(this.getBasePath(id));
+  }
+
+  delete(userId: number, fileToDelete: string): void {
+    const index = this.existingDirectoryItems.findIndex(
+      (item) => item === this.getBasePath(userId) + '/' + fileToDelete,
+    );
+    this.existingDirectoryItems.splice(index, 1);
+  }
+
+  getFileAsStream(
+    userId: number,
+    filePath: string,
+  ): { file: fs.ReadStream; fileName: string } {
+    return { file: undefined, fileName: '' };
   }
 }

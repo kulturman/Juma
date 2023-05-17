@@ -7,7 +7,35 @@ import {
   DirectoryItemType,
 } from '../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
 import * as path from 'path';
+import { NotFoundException } from '../../../../../shared/hexagon/exceptions/notFoundException';
 export class FileSystemStorageGateway implements FileStorageGateway {
+  getFileAsStream(
+    userId: number,
+    filePath: string,
+  ): { file: fs.ReadStream; fileName: string } {
+    {
+      const fullFilePath = `${this.getBasePath(userId)}/${filePath}`;
+
+      if (!fs.existsSync(fullFilePath)) {
+        throw new NotFoundException('File not found');
+      }
+
+      return {
+        file: fs.createReadStream(fullFilePath),
+        fileName: path.basename(filePath),
+      };
+    }
+  }
+
+  getBasePath(userId: number): string {
+    return `${process.env.TORRENTS_STORAGE_PATH}/${userId}`;
+  }
+  delete(userId: number, fileToDelete: string): void {
+    fs.rmSync(this.getBasePath(userId) + '/' + fileToDelete, {
+      recursive: true,
+      force: true,
+    });
+  }
   copy(source: string, destination: string): void {
     const fileName = path.basename(source);
     fs.cpSync(source, `${destination}/${fileName}`);

@@ -7,7 +7,6 @@ export class CopyFile {
 
   async handle(copyFileCommand: CopyFileCommand) {
     const fileName = path.basename(copyFileCommand.source);
-
     if (!(await this.fileStorageGateway.fileExists(copyFileCommand.source))) {
       throw new BadRequestException('File or directory does not exist');
     }

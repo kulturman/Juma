@@ -40,7 +40,7 @@ describe('Copy file', () => {
     ];
     const copyFileCommand = {
       source: '/test/innerDoc/test2.txt',
-      destination: '/test/test2.txt',
+      destination: '/test',
     };
     await expect(async () =>
       new CopyFile(fileStorageGateway).handle(copyFileCommand),

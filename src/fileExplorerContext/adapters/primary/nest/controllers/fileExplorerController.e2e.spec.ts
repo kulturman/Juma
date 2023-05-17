@@ -115,4 +115,63 @@ describe('FileExplorer controller', () => {
       fs.rmSync(baseDirectory, { recursive: true, force: true });
     });
   });
+
+  describe('DELETE /fs', () => {
+    const fileToDelete = 'test.txt';
+
+    it('Should delete file', async () => {
+      fs.mkdirSync(`${baseDirectory}`, {
+        recursive: true,
+      });
+
+      fs.closeSync(fs.openSync(`${baseDirectory}/${fileToDelete}`, 'w'));
+      expect(fs.existsSync(`${baseDirectory}/${fileToDelete}`)).toBeTruthy();
+
+      await request(app.getHttpServer())
+        .delete(`/fs/${fileToDelete}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(fs.existsSync(`${baseDirectory}/${fileToDelete}`)).toBeFalsy();
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+  });
+
+  describe('GET /fs/file/download', () => {
+    const fileToDownload = '9780321127426.txt';
+    const downloadedFileName = `download.${fileToDownload}`;
+
+    fs.mkdirSync(`${baseDirectory}`, {
+      recursive: true,
+    });
+
+    it('Should download file', async () => {
+      const fileContent = 'kulturman is a beast';
+      await fs.promises.writeFile(
+        `${baseDirectory}/${fileToDownload}`,
+        fileContent,
+      );
+      const response = await request(app.getHttpServer())
+        .get(`/fs/file/download/${fileToDownload}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      expect(response.headers['content-type']).toEqual(
+        'application/octet-stream',
+      );
+      expect(response.headers['content-disposition']).toContain(
+        `attachment; filename="${fileToDownload}"`,
+      );
+      //Let's write file in the same directory with a different name
+      await fs.promises.writeFile(
+        `${baseDirectory}/${downloadedFileName}`,
+        response.body,
+      );
+
+      expect(
+        fs.readFileSync(`${baseDirectory}/${downloadedFileName}`, 'utf-8'),
+      ).toEqual(fileContent);
+
+      fs.rmSync(baseDirectory, { recursive: true, force: true });
+    });
+  });
 });
