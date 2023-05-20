@@ -141,23 +141,27 @@ describe('FileExplorer controller', () => {
     const fileToDownload = '9780321127426.txt';
     const downloadedFileName = `download.${fileToDownload}`;
 
-    fs.mkdirSync(`${baseDirectory}`, {
-      recursive: true,
-    });
-
     it('Should download file', async () => {
+      fs.mkdirSync(`${baseDirectory}`, {
+        recursive: true,
+      });
+
       const fileContent = 'kulturman is a beast';
+
       await fs.promises.writeFile(
         `${baseDirectory}/${fileToDownload}`,
         fileContent,
       );
+
       const response = await request(app.getHttpServer())
         .get(`/fs/file/download/${fileToDownload}`)
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
+
       expect(response.headers['content-type']).toEqual(
         'application/octet-stream',
       );
+
       expect(response.headers['content-disposition']).toContain(
         `attachment; filename="${fileToDownload}"`,
       );
