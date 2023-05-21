@@ -5,12 +5,12 @@ export class DeleteFile {
   constructor(private readonly fileStorageGateway: FileStorageGateway) {}
 
   async handle(command: DeleteFileCommand) {
-    const fileFullPath =
-      this.fileStorageGateway.getBasePath(command.userId) +
-      '/' +
-      command.filePath;
-
-    if (!(await this.fileStorageGateway.fileExists(fileFullPath))) {
+    if (
+      !(await this.fileStorageGateway.fileExists(
+        command.userId,
+        command.filePath,
+      ))
+    ) {
       throw new BadRequestException('File does not exist');
     }
     this.fileStorageGateway.delete(command.userId, command.filePath);

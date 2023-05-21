@@ -11,17 +11,19 @@ export class RetrieveFolderContent {
   constructor(private readonly fileStorageGateway: FileStorageGateway) {}
 
   async handle(
-    basePath: string,
+    userId: number,
     directory: string,
   ): Promise<DirectoryContentDetails> {
-    const directoryPath = `${basePath}/${directory}`;
-    if (!(await this.fileStorageGateway.fileExists(basePath))) {
+    const basePath = this.fileStorageGateway.getBasePath(userId);
+
+    if (!(await this.fileStorageGateway.fileExists(userId, ''))) {
       return { folders: [], files: [] };
     }
 
     const directoryContent: DirectoryContent =
-      await this.fileStorageGateway.getDirectoryContent(directoryPath);
-    if (!(await this.fileStorageGateway.fileExists(directoryPath))) {
+      await this.fileStorageGateway.getDirectoryContent(userId, directory);
+
+    if (!(await this.fileStorageGateway.fileExists(userId, directory))) {
       throw new NotFoundException('Directory does not exist');
     }
 

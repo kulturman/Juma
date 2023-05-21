@@ -28,22 +28,20 @@ export class FileExplorerController {
 
   @Get('folder/:folderPath?')
   getFolderContent(@Req() req, @Param('folderPath') folderPath: string) {
-    const basePath = `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}`;
-    return this.retrieveDirectoryContent.handle(basePath, folderPath || '');
+    return this.retrieveDirectoryContent.handle(
+      req.user.id as number,
+      folderPath || '',
+    );
   }
   @Post('folder/:folderPath?')
   async createDirectory(
     @Req() req,
-    @Body('folderName') folderName,
+    @Body('folderName') folderName: string,
     @Param('folderPath') folderPath: string,
   ) {
-    const basePath =
-      `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}` as string;
-    folderPath = folderPath ? folderPath : '';
-
     await this.createFolder.handle({
-      basePath,
-      path: folderPath,
+      userId: req.user.id as number,
+      path: folderPath || '',
       folderName,
     });
   }
@@ -51,11 +49,10 @@ export class FileExplorerController {
   @Post('copy/:filePath')
   @HttpCode(200)
   async copyItem(@Req() req, @Body('destination') destination) {
-    const basePath =
-      `${process.env.TORRENTS_STORAGE_PATH}/${req.user.id}` as string;
     await this.copyFile.handle({
-      source: basePath + '/' + req.params.filePath,
-      destination: basePath + '/' + destination,
+      userId: req.user.id as number,
+      source: req.params.filePath,
+      destination: destination,
     });
   }
 

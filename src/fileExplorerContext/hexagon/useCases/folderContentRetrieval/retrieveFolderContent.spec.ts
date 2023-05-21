@@ -10,17 +10,19 @@ import * as _ from 'lodash';
 import { FileStorageGatewayStub } from '../../../adapters/secondary/gateways/fileStorage/stubs/fileStorageGatewayStub';
 
 describe('Folder content retrieval', () => {
-  const basePath = '/home/kulturman/1';
+  let basePath: string;
+  const userId = 1;
   const directoryPath = 'directoryPath';
   let fileStorageGateway: FileStorageGatewayStub;
 
   beforeEach(() => {
     fileStorageGateway = new FileStorageGatewayStub();
+    basePath = fileStorageGateway.getBasePath(userId);
   });
 
   it('Should retrieve nothing if base directory does not exist', async () => {
     expectDirectoryContentDetails(
-      await retrieveDirectoryContent(basePath, directoryPath),
+      await retrieveDirectoryContent(userId, directoryPath),
       {
         folders: [],
         files: [],
@@ -31,7 +33,7 @@ describe('Folder content retrieval', () => {
   it('It should raise an exception if directory path does not exist', async () => {
     initExistingDirectories(basePath);
     await expect(async () =>
-      retrieveDirectoryContent(basePath, directoryPath),
+      retrieveDirectoryContent(userId, directoryPath),
     ).rejects.toThrow('Directory does not exist');
   });
 
@@ -52,7 +54,7 @@ describe('Folder content retrieval', () => {
       fileStorageGateway.addItems(audioFile, videoFIle, folder, anotherFolder);
 
       expectDirectoryContentDetails(
-        await retrieveDirectoryContent(basePath, directoryPath),
+        await retrieveDirectoryContent(userId, directoryPath),
         {
           folders: [
             { ..._.omit(anotherFolder, ['type']) },
@@ -112,12 +114,9 @@ describe('Folder content retrieval', () => {
     };
   };
 
-  const retrieveDirectoryContent = (
-    basePath: string,
-    directoryPath: string,
-  ) => {
+  const retrieveDirectoryContent = (userId: number, directoryPath: string) => {
     return new RetrieveFolderContent(fileStorageGateway).handle(
-      basePath,
+      userId,
       directoryPath,
     );
   };
