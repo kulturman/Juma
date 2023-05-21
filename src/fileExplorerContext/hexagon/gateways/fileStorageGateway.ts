@@ -2,10 +2,10 @@ import { DirectoryContent } from 'src/fileExplorerContext/hexagon/useCases/folde
 import fs from 'fs';
 
 export interface FileStorageGateway {
-  fileExists(path: string): Promise<boolean>;
-  getDirectoryContent(path: string): Promise<DirectoryContent>;
-  createFolder(filePath: string): void;
-  copy(source: string, destination: string): void;
+  fileExists(userId: number, path: string): Promise<boolean>;
+  getDirectoryContent(userId: number, path: string): Promise<DirectoryContent>;
+  createFolder(userId: number, filePath: string): void;
+  copy(userId: number, source: string, destination: string): void;
   delete(userId: number, fileToDelete: string): void;
   getBasePath(userId: number): string;
   getFileAsStream(

@@ -6,26 +6,29 @@ export class CreateFolder {
   constructor(private fileStorageGatway: FileStorageGateway) {}
 
   async handle(command: CreateFolderCommand) {
-    const basePath = `${command.basePath}${command.path !== '' ? '/' : ''}${
-      command.path
-    }`;
-
-    if (!(await this.fileStorageGatway.fileExists(basePath))) {
+    if (
+      !(await this.fileStorageGatway.fileExists(command.userId, command.path))
+    ) {
       throw new NotFoundException('Path not found');
     }
 
-    const newDirectoryPath = `${basePath}/${command.folderName}`;
+    const newDirectoryPath =
+      command.path === ''
+        ? command.folderName
+        : command.path + '/' + command.folderName;
 
-    if (await this.fileStorageGatway.fileExists(newDirectoryPath)) {
+    if (
+      await this.fileStorageGatway.fileExists(command.userId, newDirectoryPath)
+    ) {
       throw new BadRequestException('Directory already exists');
     }
 
-    await this.fileStorageGatway.createFolder(newDirectoryPath);
+    await this.fileStorageGatway.createFolder(command.userId, newDirectoryPath);
   }
 }
 
 export interface CreateFolderCommand {
-  basePath: string;
+  userId: number;
   path: string;
   folderName: string;
 }

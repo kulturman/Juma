@@ -9,12 +9,20 @@ export class FileStorageGatewayStub implements FileStorageGateway {
   private _directoryContent: DirectoryContent = { children: [] };
   public existingDirectoryItems: string[] = [];
 
-  async getDirectoryContent(path: string): Promise<DirectoryContent> {
+  async getDirectoryContent(
+    userId: number,
+    path: string,
+  ): Promise<DirectoryContent> {
     return this._directoryContent;
   }
 
-  async fileExists(path: string): Promise<boolean> {
-    return this.existingDirectoryItems.includes(path);
+  async fileExists(userId: number, path: string): Promise<boolean> {
+    let fullPath = this.getBasePath(userId);
+
+    if (path !== '') {
+      fullPath += '/' + path;
+    }
+    return this.existingDirectoryItems.includes(fullPath);
   }
 
   set directoryContent(value: DirectoryContent) {
@@ -24,12 +32,14 @@ export class FileStorageGatewayStub implements FileStorageGateway {
   addItems(...items: DirectoryEntity[]) {
     this._directoryContent.children.push(...items);
   }
-  createFolder(filePath: string): void {
-    this.existingDirectoryItems.push(filePath);
+  createFolder(userId: number, filePath: string): void {
+    this.existingDirectoryItems.push(this.getBasePath(userId) + '/' + filePath);
   }
 
-  copy(source: string, destination: string): void {
-    this.existingDirectoryItems.push(destination);
+  copy(userId: number, source: string, destination: string): void {
+    this.existingDirectoryItems.push(
+      this.getBasePath(userId) + '/' + destination,
+    );
   }
 
   getBasePath(id: number) {

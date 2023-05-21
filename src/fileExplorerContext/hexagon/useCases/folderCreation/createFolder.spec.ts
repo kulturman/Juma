@@ -3,17 +3,19 @@ import { CreateFolder } from './createFolder';
 
 describe('Folder creation', () => {
   let fileStorageService = null;
+  const userId = 100;
   const folderToCreate = 'newDirectory';
-  const basePath = '/home/kulturman/1';
+  let basePath;
 
   beforeEach(() => {
     fileStorageService = new FileStorageGatewayStub();
+    basePath = fileStorageService.getBasePath(userId);
   });
 
   it('Should throw NotFoundException is baseDirectory does not exist', async () => {
     await expect(
       new CreateFolder(fileStorageService).handle({
-        basePath,
+        userId,
         path: '',
         folderName: folderToCreate,
       }),
@@ -27,7 +29,7 @@ describe('Folder creation', () => {
     ];
     await expect(() =>
       new CreateFolder(fileStorageService).handle({
-        basePath,
+        userId,
         path: '',
         folderName: folderToCreate,
       }),
@@ -41,15 +43,13 @@ describe('Folder creation', () => {
     ];
 
     await new CreateFolder(fileStorageService).handle({
-      basePath,
+      userId,
       path: 'innerDir',
       folderName: folderToCreate,
     });
 
     expect(
-      await fileStorageService.fileExists(
-        basePath + '/innerDir/' + folderToCreate,
-      ),
+      await fileStorageService.fileExists(userId, 'innerDir/' + folderToCreate),
     ).toBe(true);
   });
 });

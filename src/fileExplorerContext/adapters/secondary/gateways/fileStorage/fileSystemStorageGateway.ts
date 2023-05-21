@@ -36,21 +36,26 @@ export class FileSystemStorageGateway implements FileStorageGateway {
       force: true,
     });
   }
-  copy(source: string, destination: string): void {
+  copy(userId: number, source: string, destination: string): void {
     const fileName = path.basename(source);
-    fs.cpSync(source, `${destination}/${fileName}`);
+    fs.cpSync(
+      `${this.getBasePath(userId)}/${source}`,
+      `${this.getBasePath(userId)}/${destination}/${fileName}`,
+    );
   }
-  fileExists(path: string): Promise<boolean> {
+  fileExists(userId: number, path: string): Promise<boolean> {
     return new Promise((resolve) => {
-      return resolve(fs.existsSync(path));
+      return resolve(fs.existsSync(this.getBasePath(userId) + '/' + path));
     });
   }
 
-  getDirectoryContent(path: string): Promise<DirectoryContent> {
-    const directoryContentAsJson = dirTree(path, {
-      attributes: ['extension', 'size', 'type'],
-    });
-
+  getDirectoryContent(userId: number, path: string): Promise<DirectoryContent> {
+    const directoryContentAsJson = dirTree(
+      this.getBasePath(userId) + '/' + path,
+      {
+        attributes: ['extension', 'size', 'type'],
+      },
+    );
     return Promise.resolve({
       children: directoryContentAsJson.children.map((item) => {
         return {
@@ -67,8 +72,8 @@ export class FileSystemStorageGateway implements FileStorageGateway {
     });
   }
 
-  createFolder(directoryPath: string): void {
-    fs.mkdir(directoryPath, (err) => {
+  createFolder(userId: number, directoryPath: string): void {
+    fs.mkdir(this.getBasePath(userId) + '/' + directoryPath, (err) => {
       if (err) {
         throw new LogicException('Unable to create directory');
       }
