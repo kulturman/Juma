@@ -1,4 +1,4 @@
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { BadRequestException } from '../../../../shared-kernel/hexagon/exceptions/badRequestException';
 import { FileStorageGateway } from '../../gateways/fileStorageGateway';
 
 export class DeleteFile {
@@ -6,7 +6,7 @@ export class DeleteFile {
 
   async handle(command: DeleteFileCommand) {
     if (
-      !(await this.fileStorageGateway.fileExists(
+      !(await this.fileStorageGateway.doesFileExist(
         command.userId,
         command.filePath,
       ))

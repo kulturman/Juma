@@ -20,7 +20,7 @@ describe('Delete file or folder', () => {
     fileStorageGateway.existingDirectoryItems = [basePath + '/toDelete.txt'];
 
     expect(
-      await fileStorageGateway.fileExists(userId, fileToDelete),
+      await fileStorageGateway.doesFileExist(userId, fileToDelete),
     ).toBeTruthy();
 
     await deleteFileCommandHandler.handle({
@@ -29,7 +29,7 @@ describe('Delete file or folder', () => {
     });
 
     expect(
-      await fileStorageGateway.fileExists(userId, fileToDelete),
+      await fileStorageGateway.doesFileExist(userId, fileToDelete),
     ).toBeFalsy();
   });
 

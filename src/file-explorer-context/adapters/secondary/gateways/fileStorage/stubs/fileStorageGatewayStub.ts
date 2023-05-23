@@ -4,19 +4,20 @@ import {
 } from '../../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
 import { FileStorageGateway } from '../../../../../hexagon/gateways/fileStorageGateway';
 import fs from 'fs';
+import { EitherAsync, Right } from 'purify-ts';
 
 export class FileStorageGatewayStub implements FileStorageGateway {
   private _directoryContent: DirectoryContent = { children: [] };
   public existingDirectoryItems: string[] = [];
 
-  async getDirectoryContent(
+  getDirectoryContent(
     userId: number,
     path: string,
-  ): Promise<DirectoryContent> {
-    return this._directoryContent;
+  ): EitherAsync<Error, DirectoryContent> {
+    return EitherAsync.liftEither(Right(this._directoryContent));
   }
 
-  async fileExists(userId: number, path: string): Promise<boolean> {
+  async doesFileExist(userId: number, path: string): Promise<boolean> {
     let fullPath = this.getBasePath(userId);
 
     if (path !== '') {

@@ -1,6 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { Response } from 'express';
-import { CoreException } from 'src/shared/hexagon/exceptions/coreException';
+import { CoreException } from 'src/shared-kernel/hexagon/exceptions/coreException';
 
 @Catch(CoreException)
 export class CoreExceptionFilter implements ExceptionFilter {

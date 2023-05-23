@@ -1,6 +1,6 @@
 import { CopyFile } from './copyFile';
 import { FileStorageGatewayStub } from '../../../adapters/secondary/gateways/fileStorage/stubs/fileStorageGatewayStub';
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { BadRequestException } from '../../../../shared-kernel/hexagon/exceptions/badRequestException';
 import * as path from 'path';
 
 describe('Copy file', () => {

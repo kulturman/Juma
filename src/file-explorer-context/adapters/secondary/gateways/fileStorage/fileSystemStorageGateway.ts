@@ -1,13 +1,15 @@
 import { FileStorageGateway } from '../../../../hexagon/gateways/fileStorageGateway';
 import * as fs from 'fs';
 import * as dirTree from 'directory-tree';
-import { LogicException } from '../../../../../shared/hexagon/exceptions/logicException';
+import { LogicException } from '../../../../../shared-kernel/hexagon/exceptions/logicException';
 import {
   DirectoryContent,
+  DirectoryContentDetails,
   DirectoryItemType,
 } from '../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
 import * as path from 'path';
-import { NotFoundException } from '../../../../../shared/hexagon/exceptions/notFoundException';
+import { NotFoundException } from '../../../../../shared-kernel/hexagon/exceptions/notFoundException';
+import { EitherAsync, Left, Right } from 'purify-ts';
 export class FileSystemStorageGateway implements FileStorageGateway {
   getFileAsStream(
     userId: number,
@@ -43,33 +45,46 @@ export class FileSystemStorageGateway implements FileStorageGateway {
       `${this.getBasePath(userId)}/${destination}/${fileName}`,
     );
   }
-  fileExists(userId: number, path: string): Promise<boolean> {
+  doesFileExist(userId: number, path: string): Promise<boolean> {
     return new Promise((resolve) => {
       return resolve(fs.existsSync(this.getBasePath(userId) + '/' + path));
     });
   }
 
-  getDirectoryContent(userId: number, path: string): Promise<DirectoryContent> {
+  doesBaseDirectoryExist(userId: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      return resolve(fs.existsSync(this.getBasePath(userId)));
+    });
+  }
+
+  getDirectoryContent(
+    userId: number,
+    path: string,
+  ): EitherAsync<Error, DirectoryContent> {
     const directoryContentAsJson = dirTree(
       this.getBasePath(userId) + '/' + path,
       {
         attributes: ['extension', 'size', 'type'],
       },
     );
-    return Promise.resolve({
-      children: directoryContentAsJson.children.map((item) => {
-        return {
-          type:
-            item.type === 'directory'
-              ? DirectoryItemType.FOLDER
-              : DirectoryItemType.FILE,
-          name: item.name,
-          size: item.size,
-          path: item.path,
-          extension: item.extension,
-        };
+    const children = directoryContentAsJson.children;
+    if (!children) return EitherAsync.liftEither(Left(new Error('....')));
+    return EitherAsync.liftEither(
+      Right({
+        children: children.map((item) => {
+          return {
+            type:
+              item.type === 'directory'
+                ? DirectoryItemType.FOLDER
+                : DirectoryItemType.FILE,
+            name: item.name,
+            size: item.size,
+            path: item.path,
+            extension: item.extension,
+          };
+        }),
       }),
-    });
+    );
   }
 
   createFolder(userId: number, directoryPath: string): void {

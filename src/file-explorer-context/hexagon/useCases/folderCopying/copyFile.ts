@@ -1,4 +1,4 @@
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { BadRequestException } from '../../../../shared-kernel/hexagon/exceptions/badRequestException';
 import { FileStorageGateway } from '../../gateways/fileStorageGateway';
 import * as path from 'path';
 
@@ -8,7 +8,7 @@ export class CopyFile {
   async handle(command: CopyFileCommand) {
     const fileName = path.basename(command.source);
     if (
-      !(await this.fileStorageGateway.fileExists(
+      !(await this.fileStorageGateway.doesFileExist(
         command.userId,
         command.source,
       ))
@@ -17,7 +17,7 @@ export class CopyFile {
     }
 
     if (
-      await this.fileStorageGateway.fileExists(
+      await this.fileStorageGateway.doesFileExist(
         command.userId,
         command.destination === ''
           ? fileName
