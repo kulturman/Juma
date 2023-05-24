@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TorrentModule } from './torrent/torrent.module';
 import { BullModule } from '@nestjs/bull';
 import { FileExplorerModule } from './fileExplorerContext/adapters/primary/nest/fileExplorerModule';
-import { typeOrmAsyncConfig } from './sharedKernel/adapaters/primary/config/typeorm.config';
+import { typeOrmAsyncConfig } from './sharedKernel/adapters/primary/config/typeorm.config';
 
 @Module({
   imports: [

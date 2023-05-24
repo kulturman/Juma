@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { IsSame } from '../../sharedKernel/adapaters/primary/nest/validation/IsSame';
-import { IsUnique } from '../../sharedKernel/adapaters/primary/nest/validation/IsUnique';
+import { IsSame } from '../../sharedKernel/adapters/primary/nest/validation/IsSame';
+import { IsUnique } from '../../sharedKernel/adapters/primary/nest/validation/IsUnique';
 
 export class RegisterDto {
   @IsNotEmpty()

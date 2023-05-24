@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { IsUniqueConstraint } from '../../../../sharedKernel/adapaters/primary/nest/validation/IsUnique';
+import { IsUniqueConstraint } from '../../../../sharedKernel/adapters/primary/nest/validation/IsUnique';
 import { AuthService } from './authService';
 import { AuthController } from './controllers/authController';
 import { LocalStrategy } from './strategies/local.strategy';
