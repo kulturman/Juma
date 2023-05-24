@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './authContext/adapters/primary/nest/authModule';
 import { ConfigModule } from '@nestjs/config';
 import { TorrentModule } from './torrent/torrent.module';
 import { BullModule } from '@nestjs/bull';
 import { FileExplorerModule } from './fileExplorerContext/adapters/primary/nest/fileExplorerModule';
-import { typeOrmAsyncConfig } from './config/typeorm.config';
+import { typeOrmAsyncConfig } from './sharedKernel/adapaters/primary/config/typeorm.config';
 
 @Module({
   imports: [

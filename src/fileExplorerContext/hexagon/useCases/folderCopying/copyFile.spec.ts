@@ -1,6 +1,6 @@
 import { CopyFile } from './copyFile';
 import { FileStorageGatewayStub } from '../../../adapters/secondary/gateways/fileStorage/stubs/fileStorageGatewayStub';
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { BadRequestException } from '../../../../sharedKernel/hexagon/exceptions/badRequestException';
 import * as path from 'path';
 
 describe('Copy file', () => {
@@ -30,7 +30,7 @@ describe('Copy file', () => {
     expect(await fileStorageGateway.fileExists(userId, fileName)).toBe(true);
   });
 
-  it('Should throw a NotFoundException if source does not exist', async () => {
+  it('Should prevent a non existant directory to be copied', async () => {
     const copyFileCommand = {
       source: 'innerDoc/test2.txt',
       destination: '',

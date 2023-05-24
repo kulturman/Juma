@@ -25,7 +25,7 @@ export class IsSameConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsSame(relatedProperty: string) {
-  return (object: Object, propertyName: string) => {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       constraints: [relatedProperty],

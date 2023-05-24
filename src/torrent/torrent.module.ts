@@ -1,8 +1,8 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../auth/entities/user.entity';
-import { AuthModule } from '../auth/auth.module';
+import { User } from '../authContext/entities/user.entity';
+import { AuthModule } from '../authContext/adapters/primary/nest/authModule';
 import { DownloadTorrentProcessor } from './download-torrent.processor';
 import { Torrent } from './entities/torrent.entity';
 import { TorrentController } from './torrent.controller';

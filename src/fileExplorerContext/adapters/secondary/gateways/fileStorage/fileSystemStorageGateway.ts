@@ -1,13 +1,13 @@
 import { FileStorageGateway } from '../../../../hexagon/gateways/fileStorageGateway';
 import * as fs from 'fs';
 import * as dirTree from 'directory-tree';
-import { LogicException } from '../../../../../shared/hexagon/exceptions/logicException';
+import { LogicException } from '../../../../../sharedKernel/hexagon/exceptions/logicException';
 import {
   DirectoryContent,
   DirectoryItemType,
 } from '../../../../hexagon/useCases/folderContentRetrieval/directoryContent';
 import * as path from 'path';
-import { NotFoundException } from '../../../../../shared/hexagon/exceptions/notFoundException';
+import { NotFoundException } from '../../../../../sharedKernel/hexagon/exceptions/notFoundException';
 export class FileSystemStorageGateway implements FileStorageGateway {
   getFileAsStream(
     userId: number,

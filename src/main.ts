@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { BadRequestExceptionFilter } from './helpers/validation/bad-request-exception.filter';
-import { CoreExceptionFilter } from './shared/adapaters/primary/nest/exceptionFilters/coreExceptionFilter';
+import { BadRequestExceptionFilter } from './sharedKernel/adapaters/primary/nest/exceptionFilters/bad-request-exception.filter';
+import { CoreExceptionFilter } from './sharedKernel/adapaters/primary/nest/exceptionFilters/coreExceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
-import { User } from './entities/user.entity';
-import { UserJwtPayload } from './user-jwt.payload';
+import { RegisterDto } from '../../../dto/register.dto';
+import { User } from '../../../entities/user.entity';
+import { UserJtwPayload } from './userJtwPayload';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -36,13 +36,13 @@ export class AuthService {
     const user = await this.userRepository.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return new UserJwtPayload(user.id.toString(), user.email);
+      return new UserJtwPayload(user.id.toString(), user.email);
     }
 
     return null;
   }
 
-  generateToken(payload: UserJwtPayload) {
+  generateToken(payload: UserJtwPayload) {
     return this.jwtService.sign(
       { ...payload },
       {

@@ -34,6 +34,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  Oui;
 
   async setPassword(password: string) {
     this.password = await bcrypt.hashSync(password, 10);

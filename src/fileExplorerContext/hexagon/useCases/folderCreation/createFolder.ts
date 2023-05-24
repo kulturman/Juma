@@ -1,6 +1,6 @@
 import { FileStorageGateway } from '../../gateways/fileStorageGateway';
-import { NotFoundException } from '../../../../shared/hexagon/exceptions/notFoundException';
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { NotFoundException } from '../../../../sharedKernel/hexagon/exceptions/notFoundException';
+import { BadRequestException } from '../../../../sharedKernel/hexagon/exceptions/badRequestException';
 
 export class CreateFolder {
   constructor(private fileStorageGatway: FileStorageGateway) {}

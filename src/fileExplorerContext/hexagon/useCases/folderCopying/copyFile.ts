@@ -1,4 +1,4 @@
-import { BadRequestException } from '../../../../shared/hexagon/exceptions/badRequestException';
+import { BadRequestException } from '../../../../sharedKernel/hexagon/exceptions/badRequestException';
 import { FileStorageGateway } from '../../gateways/fileStorageGateway';
 import * as path from 'path';
 
