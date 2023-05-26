@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { IsUniqueConstraint } from '../../../../sharedKernel/hexagon/validation/IsUnique';
 import { AuthService } from './authService';
 import { AuthController } from './controllers/authController';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -22,7 +21,6 @@ import { BcryptPasswordEncrypter } from '../../secondary/gateways/bcryptPassword
   controllers: [AuthController],
   providers: [
     AuthService,
-    IsUniqueConstraint,
     LocalStrategy,
     LocalAuthGuard,
     JwtStrategy,
