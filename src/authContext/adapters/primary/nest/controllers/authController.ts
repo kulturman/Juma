@@ -14,13 +14,14 @@ import { JwtAuthGuard } from '../guards/jwtAuthGuard';
 import { LocalAuthGuard } from '../guards/localAuthGuard';
 import { Public } from '../guards/publicDecorator';
 import { Register } from '../../../../hexagon/useCases/registration/register';
-import { EitherAsync } from 'purify-ts';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private readonly registerUser: Register,
+    private jwtService: JwtService,
   ) {}
 
   @Post('register')
@@ -42,7 +43,13 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   async login(@Request() req) {
-    return { token: this.authService.generateToken(req.user) };
+    return this.jwtService.sign(
+      { ...req.user },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '1h',
+      },
+    );
   }
 
   @Get('profile')
