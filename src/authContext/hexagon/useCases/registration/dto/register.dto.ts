@@ -1,13 +1,13 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { IsSame } from '../../sharedKernel/adapters/primary/nest/validation/IsSame';
-import { IsUnique } from '../../sharedKernel/adapters/primary/nest/validation/IsUnique';
+import { IsSame } from '../../../../../sharedKernel/hexagon/validation/IsSame';
+import { IsUnique } from '../../../../../sharedKernel/hexagon/validation/IsUnique';
 
 export class RegisterDto {
   @IsNotEmpty()
   fullname: string;
 
   @IsEmail()
-  @IsUnique({ table: 'users' })
+  //@IsUnique({ table: 'users' })
   email: string;
 
   @IsNotEmpty()

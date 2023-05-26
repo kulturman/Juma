@@ -53,7 +53,7 @@ describe('AuthController (e2e)', () => {
   });
 
   describe('POST /auth/register', () => {
-    it('Should register user if email is not used', async () => {
+    it('should register user if email is not used', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/auth/register')
         .send({
@@ -69,7 +69,7 @@ describe('AuthController (e2e)', () => {
       });
     });
 
-    it('Should fail if email is already used', async () => {
+    it('should fail if email is already used', async () => {
       await request(app.getHttpServer())
         .post('/auth/register')
         .send({

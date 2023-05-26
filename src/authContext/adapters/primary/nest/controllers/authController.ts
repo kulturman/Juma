@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -8,20 +9,32 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../authService';
-import { RegisterDto } from '../../../../dto/register.dto';
+import { RegisterDto } from '../../../../hexagon/useCases/registration/dto/register.dto';
 import { JwtAuthGuard } from '../guards/jwtAuthGuard';
 import { LocalAuthGuard } from '../guards/localAuthGuard';
 import { Public } from '../guards/publicDecorator';
+import { Register } from '../../../../hexagon/useCases/registration/register';
+import { EitherAsync } from 'purify-ts';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private readonly registerUser: Register,
+  ) {}
 
   @Post('register')
   @Public()
   async register(@Body() registerDto: RegisterDto) {
-    const userId = await this.authService.register(registerDto);
-    return { id: userId };
+    const result = await this.registerUser.handle(registerDto);
+
+    return result
+      .map((result) => {
+        return result;
+      })
+      .ifLeft((error) => {
+        throw new BadRequestException(error.message);
+      });
   }
 
   @Post('login')

@@ -5,10 +5,21 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
 export class User {
+  static register(userData: {
+    email: string;
+    password: string;
+    fullname: string;
+  }): User {
+    const user = new User();
+    user.fullname = userData.fullname;
+    user.password = userData.password;
+    user.email = userData.email;
+    return user;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,9 +45,4 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
-  Oui;
-
-  async setPassword(password: string) {
-    this.password = await bcrypt.hashSync(password, 10);
-  }
 }

@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RegisterDto } from '../../../dto/register.dto';
 import { User } from '../../../entities/user.entity';
-import { UserJtwPayload } from './userJtwPayload';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserJtwPayload } from './userJtwPayload';
 
 @Injectable()
 export class AuthService {
@@ -14,15 +13,6 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
-
-  async register(registerDto: RegisterDto) {
-    const user = new User();
-    user.email = registerDto.email;
-    user.fullname = registerDto.fullname;
-    user.setPassword(registerDto.password);
-    await this.userRepository.save(user);
-    return user.id.toString();
-  }
 
   async getUser(id: string) {
     const user = await this.userRepository.findOne({ id: +id });

@@ -14,7 +14,9 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
     text: string,
     validationArguments?: ValidationArguments,
   ): Promise<boolean> {
+    // eslint-disable-next-line prefer-const
     let { table, column } = validationArguments.constraints[0];
+
     if (!column) {
       column = validationArguments.property;
     }
@@ -28,7 +30,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
 }
 
 export function IsUnique(params: UniqueConstraintFormat) {
-  return (object: Object, propertyName: string) => {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       constraints: [params],
