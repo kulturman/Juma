@@ -4,11 +4,9 @@ items:
     id: 1000
     fullname: 'Arnaud BAKYONO'
     email: 'arnaudbakyono@gmail.com'
-    __call:
-      setPassword: 'agathe'
+    password: '$2b$10$/wdR6ehlemj50HwzlB0YOuuQE0k.6GRMzzkBZdU7baqdeQGPnL0Sa'
   user2:
     id: 2000
     fullname: 'Arnaud GMAIL'
     email: 'arnaud@gmail.com'
-    __call:
-      setPassword: 'agathe'
+    password: '$2b$10$/wdR6ehlemj50HwzlB0YOuuQE0k.6GRMzzkBZdU7baqdeQGPnL0Sa'

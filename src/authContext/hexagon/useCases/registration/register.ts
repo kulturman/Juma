@@ -15,7 +15,6 @@ export class Register {
       const existingUser = await this.authRepository.getByEmail(
         registerDto.email,
       );
-
       if (existingUser) {
         return liftEither(Left(throwE(new Error('Email is already used'))));
       }
