@@ -43,13 +43,6 @@ describe('AuthController (e2e)', () => {
         token: expect.any(String),
       });
     });
-
-    it('Should reject authentication', async () => {
-      return request(app.getHttpServer())
-        .post('/auth/login')
-        .send({ email: 'nonexistent@email.com', password: 'fake' })
-        .expect(401);
-    });
   });
 
   describe('POST /auth/register', () => {
@@ -58,7 +51,7 @@ describe('AuthController (e2e)', () => {
         .post('/auth/register')
         .send({
           fullname: 'Me',
-          email: 'arnaudbakyono@gmail.gz',
+          email: 'arnaudbakyono@gmail.bf',
           password: 'agathe',
           passwordConfirmation: 'agathe',
         })

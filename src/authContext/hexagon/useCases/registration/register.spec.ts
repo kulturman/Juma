@@ -1,8 +1,6 @@
-import { AuthRepository } from '../../gateways/repositories/authRepository';
-import { User } from '../../../entities/user.entity';
-import { PasswordEncrypter } from '../../gateways/passwordEncrypter';
 import { Register } from './register';
-import { timestamp } from 'rxjs';
+import { AuthRepositoryStub } from '../../../adapters/secondary/gateways/stubs/AuthRepositoryStub';
+import { PasswordEncrypterStub } from '../../../adapters/secondary/gateways/stubs/PasswordEncrypterStub';
 
 describe('Register user', () => {
   let authRepository: AuthRepositoryStub;
@@ -41,7 +39,7 @@ describe('Register user', () => {
     authRepository.addUser({
       fullname: registerUserDto.fullname,
       email: registerUserDto.email,
-      password: '',
+      password: '123456',
     });
 
     const result = await registerUser.handle(registerUserDto);
@@ -51,39 +49,3 @@ describe('Register user', () => {
     });
   });
 });
-
-export class PasswordEncrypterStub implements PasswordEncrypter {
-  encrypt(plainTextPassword: string): Promise<string> {
-    return Promise.resolve(plainTextPassword + 'i am hashed');
-  }
-}
-export class AuthRepositoryStub implements AuthRepository {
-  private users: Array<User> = [];
-
-  addUser(user: Partial<User>) {
-    this.users.push({
-      email: user.email,
-      password: user.password,
-      fullname: user.fullname,
-      id: this.users.length + 1,
-      emailVerifiedAt: new Date(),
-      updatedAt: new Date(),
-      createdAt: new Date(),
-    });
-  }
-  find(id: number): Promise<User | undefined> {
-    const user = this.users.find((u) => u.id === id);
-    return Promise.resolve(user);
-  }
-
-  getByEmail(email: string): Promise<User | undefined> {
-    const user = this.users.find((u) => u.email === email);
-    return Promise.resolve(user);
-  }
-
-  save(user: User): Promise<User> {
-    user.id = this.users.length + 1;
-    this.users.push(user);
-    return Promise.resolve(user);
-  }
-}

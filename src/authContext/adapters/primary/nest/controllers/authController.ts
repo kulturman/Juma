@@ -6,22 +6,20 @@ import {
   HttpCode,
   Post,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../authService';
-import { RegisterDto } from '../../../../hexagon/useCases/registration/dto/register.dto';
-import { JwtAuthGuard } from '../guards/jwtAuthGuard';
-import { LocalAuthGuard } from '../guards/localAuthGuard';
+import { RegisterDto } from '../../../../hexagon/useCases/dto/register.dto';
 import { Public } from '../guards/publicDecorator';
 import { Register } from '../../../../hexagon/useCases/registration/register';
-import { JwtService } from '@nestjs/jwt';
+import { Login } from '../../../../hexagon/useCases/login/login';
+import { AuthenticateDto } from '../../../../hexagon/useCases/dto/authenticateDto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    private readonly authService: AuthService,
     private readonly registerUser: Register,
-    private jwtService: JwtService,
+    private readonly authenticateUser: Login,
   ) {}
 
   @Post('register')
@@ -41,19 +39,11 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @Public()
-  @UseGuards(LocalAuthGuard)
-  async login(@Request() req) {
-    return this.jwtService.sign(
-      { ...req.user },
-      {
-        secret: process.env.JWT_SECRET,
-        expiresIn: '1h',
-      },
-    );
+  async login(@Body() authenticateDto: AuthenticateDto) {
+    return this.authenticateUser.handle(authenticateDto);
   }
 
   @Get('profile')
-  @UseGuards(JwtAuthGuard)
   async profile(@Request() req) {
     const { password, emailVerifiedAt, createdAt, updatedAt, ...profile } =
       await this.authService.getUser(req.user.id);

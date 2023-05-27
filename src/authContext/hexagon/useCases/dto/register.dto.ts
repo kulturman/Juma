@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { IsSame } from '../../../../../sharedKernel/hexagon/validation/IsSame';
+import { IsSame } from '../../../../sharedKernel/hexagon/validation/IsSame';
 
 export class RegisterDto {
   @IsNotEmpty()

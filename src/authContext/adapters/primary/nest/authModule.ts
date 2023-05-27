@@ -2,11 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './authService';
 import { AuthController } from './controllers/authController';
-import { LocalStrategy } from './strategies/local.strategy';
 import { LocalAuthGuard } from './guards/localAuthGuard';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtAuthGuard } from './guards/jwtAuthGuard';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { User } from '../../../entities/user.entity';
 import { DbAuthRepository } from '../../secondary/gateways/repositories/dbAuthRepository';
@@ -14,19 +11,25 @@ import { Register } from '../../../hexagon/useCases/registration/register';
 import { AuthRepository } from '../../../hexagon/gateways/repositories/authRepository';
 import { PasswordEncrypter } from '../../../hexagon/gateways/passwordEncrypter';
 import { BcryptPasswordEncrypter } from '../../secondary/gateways/bcryptPasswordEncrypter';
+import { Login } from '../../../hexagon/useCases/login/login';
+import * as process from 'process';
 
 @Module({
-  imports: [JwtModule.register({}), TypeOrmModule.forFeature([User])],
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
+    }),
+    TypeOrmModule.forFeature([User]),
+  ],
   exports: [TypeOrmModule],
   controllers: [AuthController],
   providers: [
     AuthService,
-    LocalStrategy,
     LocalAuthGuard,
-    JwtStrategy,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: LocalAuthGuard,
     },
     {
       provide: 'AuthRepository',
@@ -45,6 +48,17 @@ import { BcryptPasswordEncrypter } from '../../secondary/gateways/bcryptPassword
         return new Register(authRepository, passwordEncrypter);
       },
       inject: ['AuthRepository', 'PasswordEncrypter'],
+    },
+    {
+      provide: Login,
+      useFactory: (
+        authRepository: AuthRepository,
+        passwordEncrypter: PasswordEncrypter,
+        jwtService: JwtService,
+      ) => {
+        return new Login(authRepository, passwordEncrypter, jwtService);
+      },
+      inject: ['AuthRepository', 'PasswordEncrypter', JwtService],
     },
   ],
 })
