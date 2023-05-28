@@ -5,7 +5,7 @@ import { AuthController } from './controllers/authController';
 import { LocalAuthGuard } from './guards/localAuthGuard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
-import { User } from '../../../entities/user.entity';
+import { User } from '../../../hexagon/entities/user.entity';
 import { DbAuthRepository } from '../../secondary/gateways/repositories/dbAuthRepository';
 import { Register } from '../../../hexagon/useCases/registration/register';
 import { AuthRepository } from '../../../hexagon/gateways/repositories/authRepository';
@@ -13,6 +13,7 @@ import { PasswordEncrypter } from '../../../hexagon/gateways/passwordEncrypter';
 import { BcryptPasswordEncrypter } from '../../secondary/gateways/bcryptPasswordEncrypter';
 import { Login } from '../../../hexagon/useCases/login/login';
 import * as process from 'process';
+import { GetProfile } from '../../../hexagon/useCases/profile/getProfile';
 
 @Module({
   imports: [
@@ -59,6 +60,13 @@ import * as process from 'process';
         return new Login(authRepository, passwordEncrypter, jwtService);
       },
       inject: ['AuthRepository', 'PasswordEncrypter', JwtService],
+    },
+    {
+      provide: GetProfile,
+      useFactory: (authRepository: AuthRepository) => {
+        return new GetProfile(authRepository);
+      },
+      inject: ['AuthRepository'],
     },
   ],
 })

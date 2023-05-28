@@ -1,5 +1,9 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { cleanFixtures, loadFixtures } from '../../../../../../test/helpers';
+import {
+  cleanFixtures,
+  getToken,
+  loadFixtures,
+} from '../../../../../../test/helpers';
 import { AppModule } from '../../../../../app.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
@@ -72,6 +76,23 @@ describe('AuthController (e2e)', () => {
           passwordConfirmation: 'agathe',
         })
         .expect(400);
+    });
+  });
+
+  describe('GET /auth/profile', () => {
+    it('should get user profile', async () => {
+      const token = getToken('2000', 'arnaudbakyono@gmail.com');
+
+      const response = await request(app.getHttpServer())
+        .get('/auth/profile')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+      expect(response.body).toMatchObject({
+        id: 2000,
+        fullname: 'Arnaud GMAIL',
+        email: 'arnaud@gmail.com',
+        createdAt: expect.any(String),
+      });
     });
   });
 

@@ -1,5 +1,5 @@
 import { AuthRepository } from '../../../../hexagon/gateways/repositories/authRepository';
-import { User } from '../../../../entities/user.entity';
+import { User } from '../../../../hexagon/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

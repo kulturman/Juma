@@ -8,11 +8,12 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from '../authService';
-import { RegisterDto } from '../../../../hexagon/useCases/dto/register.dto';
+import { RegisterDto } from '../../../../hexagon/dto/register.dto';
 import { Public } from '../guards/publicDecorator';
 import { Register } from '../../../../hexagon/useCases/registration/register';
 import { Login } from '../../../../hexagon/useCases/login/login';
-import { AuthenticateDto } from '../../../../hexagon/useCases/dto/authenticateDto';
+import { AuthenticateDto } from '../../../../hexagon/dto/authenticateDto';
+import { GetProfile } from '../../../../hexagon/useCases/profile/getProfile';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +21,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly registerUser: Register,
     private readonly authenticateUser: Login,
+    private readonly getProfile: GetProfile,
   ) {}
 
   @Post('register')
@@ -45,8 +47,6 @@ export class AuthController {
 
   @Get('profile')
   async profile(@Request() req) {
-    const { password, emailVerifiedAt, createdAt, updatedAt, ...profile } =
-      await this.authService.getUser(req.user.id);
-    return profile;
+    return this.getProfile.handle(+req.user.id);
   }
 }

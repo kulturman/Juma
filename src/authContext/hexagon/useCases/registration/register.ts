@@ -1,6 +1,6 @@
 import { AuthRepository } from '../../gateways/repositories/authRepository';
-import { RegisterDto } from '../dto/register.dto';
-import { User } from '../../../entities/user.entity';
+import { RegisterDto } from '../../dto/register.dto';
+import { User } from '../../entities/user.entity';
 import { PasswordEncrypter } from '../../gateways/passwordEncrypter';
 import { EitherAsync, Left, Right } from 'purify-ts';
 

@@ -1,4 +1,4 @@
-import { User } from '../../authContext/entities/user.entity';
+import { User } from '../../authContext/hexagon/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
