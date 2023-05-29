@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 export class BcryptPasswordEncrypter implements PasswordEncrypter {
   async encrypt(plainTextPassword: string): Promise<string> {
-    return bcrypt.hash(plainTextPassword);
+    return bcrypt.hash(plainTextPassword, 10);
   }
 
   compare(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
