@@ -7,12 +7,8 @@ import * as fs from 'fs';
 
 describe('FileExplorer controller', () => {
   let app: INestApplication;
-  let token: string;
-  const userId = '2000';
-  const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
 
   beforeAll(async () => {
-    token = getToken(userId, 'arnaudbakyono@gmail.com');
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -26,11 +22,15 @@ describe('FileExplorer controller', () => {
   });
 
   describe('GET /fs/folder', () => {
-    const token = getToken(userId, 'arnaudbakyono@gmail.com');
     const firstLevelDirectory = 'Nest Js course';
     const videoFile = 'Introduction.mp4';
     const pdfFile = 'Resources.pdf';
-    const createDirectories = () => {
+
+    it('Should return directory content', async () => {
+      const userId = '2000';
+      const token = getToken(userId, 'arnaudbakyono@gmail.com');
+      const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
+
       fs.mkdirSync(`${baseDirectory}/${firstLevelDirectory}`, {
         recursive: true,
       });
@@ -39,10 +39,6 @@ describe('FileExplorer controller', () => {
       fs.closeSync(
         fs.openSync(`${baseDirectory}/${firstLevelDirectory}/${pdfFile}`, 'w'),
       );
-    };
-
-    it('Should return directory content', async () => {
-      createDirectories();
       const { body } = await request(app.getHttpServer())
         .get('/fs/folder')
         .set('Authorization', `Bearer ${token}`)
@@ -75,6 +71,10 @@ describe('FileExplorer controller', () => {
     const createdDirectory = 'Mybad';
 
     it('Should create new directory', async () => {
+      const userId = '2001';
+      const token = getToken(userId, 'arnaudbakyono@gmail.com');
+      const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
+
       fs.mkdirSync(`${baseDirectory}`, { recursive: true });
       await request(app.getHttpServer())
         .post('/fs/folder')
@@ -94,6 +94,10 @@ describe('FileExplorer controller', () => {
     const fileToCopy = 'test.txt';
 
     it('Should copy file', async () => {
+      const userId = '2002';
+      const token = getToken(userId, 'arnaudbakyono@gmail.com');
+      const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
+
       fs.mkdirSync(`${baseDirectory}/${firstLevelDirectory}`, {
         recursive: true,
       });
@@ -117,9 +121,12 @@ describe('FileExplorer controller', () => {
   });
 
   describe('DELETE /fs', () => {
-    const fileToDelete = 'test.txt';
-
     it('Should delete file', async () => {
+      const fileToDelete = 'test.txt';
+      const userId = '2003';
+      const token = getToken(userId, 'arnaudbakyono@gmail.com');
+      const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
+
       fs.mkdirSync(`${baseDirectory}`, {
         recursive: true,
       });
@@ -142,11 +149,14 @@ describe('FileExplorer controller', () => {
     const downloadedFileName = `download.${fileToDownload}`;
 
     it('Should download file', async () => {
+      const userId = '2010';
+      const baseDirectory = process.env.TORRENTS_STORAGE_PATH + '/' + userId;
+      const token = getToken(userId, 'arnaudbakyono@gmail.com');
+      const fileContent = 'kulturman is a beast';
+
       fs.mkdirSync(`${baseDirectory}`, {
         recursive: true,
       });
-
-      const fileContent = 'kulturman is a beast';
 
       await fs.promises.writeFile(
         `${baseDirectory}/${fileToDownload}`,
