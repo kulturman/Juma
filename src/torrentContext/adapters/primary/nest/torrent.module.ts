@@ -5,8 +5,8 @@ import { User } from '../authContext/hexagon/entities/user.entity';
 import { AuthModule } from '../authContext/adapters/primary/nest/authModule';
 import { DownloadTorrentProcessor } from './download-torrent.processor';
 import { Torrent } from './entities/torrent.entity';
-import { TorrentController } from './torrent.controller';
 import { TorrentService } from './torrent.service';
+import { TorrentController } from './adapters/primary/nest/controllers/torrentController';
 
 @Module({
   imports: [

@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './publicDecorator';
 import { Reflector } from '@nestjs/core';
+import * as process from 'process';
 
 @Injectable()
 export class LocalAuthGuard implements CanActivate {
@@ -34,8 +35,9 @@ export class LocalAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token);
-      request['user'] = payload;
+      request['user'] = await this.jwtService.verifyAsync(token, {
+        publicKey: process.env.JWT_SECRET as string,
+      });
     } catch {
       throw new UnauthorizedException();
     }
