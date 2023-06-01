@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../authService';
 import { RegisterDto } from '../../../../hexagon/dto/register.dto';
-import { Public } from '../guards/publicDecorator';
 import { Register } from '../../../../hexagon/useCases/registration/register';
 import { Login } from '../../../../hexagon/useCases/login/login';
 import { AuthenticateDto } from '../../../../hexagon/dto/authenticateDto';
 import { GetProfile } from '../../../../hexagon/useCases/profile/getProfile';
+import { Public } from '../guards/publicDecorator';
 
 @Controller('auth')
 export class AuthController {

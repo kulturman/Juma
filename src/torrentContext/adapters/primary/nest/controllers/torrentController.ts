@@ -9,7 +9,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Queue } from 'bull';
 import { join } from 'path';
-import { TorrentService } from './torrent.service';
+import { TorrentService } from '../../../../torrent.service';
+import { multerConfig } from '../multerConfig';
 
 @Controller('torrents')
 export class TorrentController {
@@ -19,11 +20,7 @@ export class TorrentController {
   ) {}
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('file', {
-      dest: join(__dirname, '../uploads/torrents'),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', multerConfig))
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
     const torrentEntity = await this.torrentService.createNewTorrent(
       file.path,

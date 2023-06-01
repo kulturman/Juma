@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './authContext/adapters/primary/nest/authModule';
 import { ConfigModule } from '@nestjs/config';
-import { TorrentModule } from './torrent/torrent.module';
+import { TorrentModule } from './torrentContext/adapters/primary/nest/torrent.module';
 import { BullModule } from '@nestjs/bull';
 import { FileExplorerModule } from './fileExplorerContext/adapters/primary/nest/fileExplorerModule';
 import { typeOrmAsyncConfig } from './sharedKernel/adapters/primary/config/typeorm.config';
