@@ -2,7 +2,7 @@ import { AuthRepository } from '../../../../authContext/hexagon/gateways/reposit
 import { NotFoundException } from '../../../../sharedKernel/hexagon/exceptions/notFoundException';
 import { Torrent } from '../../entities/torrent.entity';
 import { TorrentRepository } from '../../gateways/repositories/torrentRepository';
-import { TorrentStatus } from '../../../torrent-status.enum';
+import { TorrentStatus } from '../../torrent-status.enum';
 import * as fs from 'fs';
 import { User } from '../../../../authContext/hexagon/entities/user.entity';
 import {

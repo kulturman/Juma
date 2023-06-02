@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TorrentStatus } from '../../torrent-status.enum';
+import { TorrentStatus } from '../torrent-status.enum';
 
 @Entity({ name: 'torrents' })
 export class Torrent {

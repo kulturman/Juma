@@ -9,12 +9,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Queue } from 'bull';
 import { multerConfig } from '../multerConfig';
-import { DownloadTorrent } from '../../../../hexagon/useCases/torrentDownloading/downloadTorrent';
 
 @Controller('torrents')
 export class TorrentController {
   constructor(
-    private readonly downloadTorrent: DownloadTorrent,
     @InjectQueue('downloadTorrent') private downloadTorrentQueue: Queue,
   ) {}
 
