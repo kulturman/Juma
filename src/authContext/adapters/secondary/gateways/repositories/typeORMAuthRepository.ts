@@ -3,7 +3,7 @@ import { User } from '../../../../hexagon/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-export class DbAuthRepository implements AuthRepository {
+export class TypeORMAuthRepository implements AuthRepository {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,

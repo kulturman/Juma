@@ -7,7 +7,6 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { AuthService } from '../authService';
 import { RegisterDto } from '../../../../hexagon/dto/register.dto';
 import { Register } from '../../../../hexagon/useCases/registration/register';
 import { Login } from '../../../../hexagon/useCases/login/login';
@@ -18,7 +17,6 @@ import { Public } from '../guards/publicDecorator';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
     private readonly registerUser: Register,
     private readonly authenticateUser: Login,
     private readonly getProfile: GetProfile,

@@ -1,4 +1,4 @@
-import { User } from '../../authContext/hexagon/entities/user.entity';
+import { User } from '../../../authContext/hexagon/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TorrentStatus } from '../torrent-status.enum';
+import { TorrentStatus } from '../../torrent-status.enum';
 
 @Entity({ name: 'torrents' })
 export class Torrent {
@@ -18,6 +18,12 @@ export class Torrent {
     this.torrentName = torrentName;
     this.status = TorrentStatus.QUEUED;
     this.path = path;
+  }
+
+  startTorrent(): Torrent {
+    this.progression = 0;
+    this.status = TorrentStatus.STARTED;
+    return this;
   }
 
   @PrimaryGeneratedColumn()

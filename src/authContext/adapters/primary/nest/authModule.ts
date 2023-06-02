@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthService } from './authService';
 import { AuthController } from './controllers/authController';
 import { LocalAuthGuard } from './guards/localAuthGuard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { User } from '../../../hexagon/entities/user.entity';
-import { DbAuthRepository } from '../../secondary/gateways/repositories/dbAuthRepository';
+import { TypeORMAuthRepository } from '../../secondary/gateways/repositories/typeORMAuthRepository';
 import { Register } from '../../../hexagon/useCases/registration/register';
 import { AuthRepository } from '../../../hexagon/gateways/repositories/authRepository';
 import { PasswordEncrypter } from '../../../hexagon/gateways/passwordEncrypter';
@@ -23,10 +22,9 @@ import { GetProfile } from '../../../hexagon/useCases/profile/getProfile';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, 'AuthRepository'],
   controllers: [AuthController],
   providers: [
-    AuthService,
     LocalAuthGuard,
     {
       provide: APP_GUARD,
@@ -34,7 +32,7 @@ import { GetProfile } from '../../../hexagon/useCases/profile/getProfile';
     },
     {
       provide: 'AuthRepository',
-      useClass: DbAuthRepository,
+      useClass: TypeORMAuthRepository,
     },
     {
       provide: 'PasswordEncrypter',
