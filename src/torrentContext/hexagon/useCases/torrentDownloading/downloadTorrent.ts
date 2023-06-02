@@ -13,11 +13,13 @@ import {
 
 export class DownloadTorrent implements TorrentProgressionListener {
   private torrentEntity: Torrent;
+
   constructor(
     private readonly torrentRepository: TorrentRepository,
     private readonly userRepository: AuthRepository,
     private readonly torrentClient: TorrentClient,
   ) {}
+
   async handle(command: DonwloadTorrentCommand) {
     const user: User = await this.userRepository.find(command.userId);
 

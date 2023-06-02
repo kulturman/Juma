@@ -4,8 +4,8 @@ import { User } from '../../../../hexagon/entities/user.entity';
 export class AuthRepositoryStub implements AuthRepository {
   private users: Array<User> = [];
 
-  addUser(user: Partial<User>) {
-    this.users.push({
+  addUser(user: Partial<User>): User {
+    const createdUser = {
       email: user.email,
       password: user.password,
       fullname: user.fullname,
@@ -13,7 +13,10 @@ export class AuthRepositoryStub implements AuthRepository {
       emailVerifiedAt: new Date(),
       updatedAt: new Date(),
       createdAt: new Date(),
-    });
+    };
+    this.users.push(createdUser);
+
+    return createdUser;
   }
   find(id: number): Promise<User | undefined> {
     const user = this.users.find((u) => u.id === id);
