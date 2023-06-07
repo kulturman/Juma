@@ -6,24 +6,28 @@ import { TorrentStatus } from '../../torrent-status.enum';
 import * as fs from 'fs';
 import { TorrentRepositoryStub } from '../../../adapters/secondary/gateways/repositories/stubs/TorrentRepositoryStub';
 import { TorrentClientStub } from '../../../adapters/secondary/gateways/stubs/TorrentClientStub';
+import { FileSystemStorageGateway } from 'src/fileExplorerContext/adapters/secondary/gateways/fileStorage/fileSystemStorageGateway';
 
 describe('Download torrent', () => {
   let torrentRepository: TorrentRepositoryStub;
   let userRepository: AuthRepositoryStub;
   let torrentClient: TorrentClientStub;
   let downloadTorrent: DownloadTorrent;
+  let fileStorageGateway: FileSystemStorageGateway;
   let userBaseDirectory: string;
 
   beforeEach(() => {
     userRepository = new AuthRepositoryStub();
     torrentClient = new TorrentClientStub();
     torrentRepository = new TorrentRepositoryStub();
-    userBaseDirectory = process.env.TORRENTS_STORAGE_PATH + '/1';
+    fileStorageGateway = new FileSystemStorageGateway();
+    userBaseDirectory = fileStorageGateway.getBasePath(1);
 
     downloadTorrent = new DownloadTorrent(
       torrentRepository,
       userRepository,
       torrentClient,
+      fileStorageGateway,
     );
   });
 
@@ -57,7 +61,10 @@ describe('Download torrent', () => {
       progression: 100,
     });
 
-    expect(fs.existsSync(userBaseDirectory + '/' + torrent.torrentName));
+    expect(fs.existsSync(userBaseDirectory + '/' + torrent.torrentName)).toBe(
+      true,
+    );
+
     fs.rmSync(userBaseDirectory, {
       recursive: true,
     });

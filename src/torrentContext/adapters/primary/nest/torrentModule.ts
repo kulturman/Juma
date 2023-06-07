@@ -14,6 +14,8 @@ import {
 import { AuthRepository } from '../../../../authContext/hexagon/gateways/repositories/authRepository';
 import { TorrentClient } from '../../../hexagon/gateways/torrentClient';
 import { WebTorrentClient } from '../../secondary/gateways/webTorrentClient';
+import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/gateways/fileStorageGateway';
+import { FileSystemStorageGateway } from 'src/fileExplorerContext/adapters/secondary/gateways/fileStorage/fileSystemStorageGateway';
 
 @Module({
   imports: [
@@ -36,19 +38,25 @@ import { WebTorrentClient } from '../../secondary/gateways/webTorrentClient';
       useClass: WebTorrentClient,
     },
     {
+      provide: 'FileStorageGateway',
+      useClass: FileSystemStorageGateway,
+    },
+    {
       provide: DownloadTorrent,
       useFactory: (
         torrentRepository: TorrentRepository,
         userRepository: AuthRepository,
         torrentClient: TorrentClient,
+        fileSystemStorage: FileStorageGateway,
       ) => {
         return new DownloadTorrent(
           torrentRepository,
           userRepository,
           torrentClient,
+          fileSystemStorage,
         );
       },
-      inject: [TorrentRepositoryToken, 'AuthRepository', TorrentClient],
+      inject: [TorrentRepositoryToken, 'AuthRepository', TorrentClient, 'FileStorageGateway'],
     },
   ],
 })

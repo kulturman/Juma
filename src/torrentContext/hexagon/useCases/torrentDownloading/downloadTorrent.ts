@@ -10,6 +10,7 @@ import {
   TorrentData,
   TorrentProgressionListener,
 } from '../../gateways/torrentClient';
+import { FileStorageGateway } from 'src/fileExplorerContext/hexagon/gateways/fileStorageGateway';
 
 export class DownloadTorrent implements TorrentProgressionListener {
   private torrentEntity: Torrent;
@@ -18,6 +19,7 @@ export class DownloadTorrent implements TorrentProgressionListener {
     private readonly torrentRepository: TorrentRepository,
     private readonly userRepository: AuthRepository,
     private readonly torrentClient: TorrentClient,
+    private readonly fileSystemStorage: FileStorageGateway,
   ) {}
 
   async handle(command: DonwloadTorrentCommand) {
@@ -33,9 +35,11 @@ export class DownloadTorrent implements TorrentProgressionListener {
 
     this.torrentEntity.startTorrent();
     await this.torrentRepository.save(this.torrentEntity);
-    const baseDirectory = process.env.TORRENTS_STORAGE_PATH;
-    const userTorrentDirectory = `${baseDirectory}/${command.userId}`;
-    const newTorrentDirectory = `${userTorrentDirectory}/${this.torrentEntity.torrentName}`;
+
+    const newTorrentDirectory =
+      this.fileSystemStorage.getBasePath(user.id) +
+      '/' +
+      this.torrentEntity.torrentName;
     fs.mkdirSync(newTorrentDirectory, { recursive: true });
 
     this.torrentClient.start(
