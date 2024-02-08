@@ -1,6 +1,5 @@
 import { AuthRepositoryStub } from '../../../../authContext/adapters/secondary/gateways/stubs/AuthRepositoryStub';
 import { DownloadTorrent } from './downloadTorrent';
-import * as process from 'process';
 import { NotFoundException } from '../../../../sharedKernel/hexagon/exceptions/notFoundException';
 import { TorrentStatus } from '../../torrent-status.enum';
 import * as fs from 'fs';

@@ -56,7 +56,12 @@ import { FileSystemStorageGateway } from 'src/fileExplorerContext/adapters/secon
           fileSystemStorage,
         );
       },
-      inject: [TorrentRepositoryToken, 'AuthRepository', TorrentClient, 'FileStorageGateway'],
+      inject: [
+        TorrentRepositoryToken,
+        'AuthRepository',
+        TorrentClient,
+        'FileStorageGateway',
+      ],
     },
   ],
 })
