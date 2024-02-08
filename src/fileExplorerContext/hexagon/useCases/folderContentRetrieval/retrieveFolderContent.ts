@@ -2,7 +2,7 @@ import {
   DirectoryContent,
   DirectoryContentDetails,
   DirectoryItemType,
-} from './DirectoryContent';
+} from './directoryContent';
 import { audiosFormats, videosFormats } from './mediaTypes';
 import { NotFoundException } from '@nestjs/common';
 import { FileStorageGateway } from '../../gateways/fileStorageGateway';
