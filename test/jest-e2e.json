@@ -1,5 +1,6 @@
 {
   "setupFiles": ["<rootDir>/test/setEnvVars.ts"],
+  "setupFilesAfterEnv": ["<rootDir>/test/test-containers.ts"],
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": "..",
   "modulePaths": [
