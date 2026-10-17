@@ -8,8 +8,8 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   useFactory: async (): Promise<TypeOrmModuleOptions> => {
     return {
       type: 'mysql',
-      host: 'mysql',
-      port: 3306,
+      host: process.env.MYSQL_HOST ?? 'mysql',
+      port: Number(process.env.MYSQL_PORT ?? 3306),
       database: process.env.MYSQL_DATABASE,
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
@@ -21,8 +21,8 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
-  host: 'mysql',
-  port: 3306,
+  host: process.env.MYSQL_HOST ?? 'mysql',
+  port: Number(process.env.MYSQL_PORT ?? 3306),
   database: process.env.MYSQL_DATABASE,
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
