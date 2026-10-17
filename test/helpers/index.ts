@@ -46,7 +46,7 @@ export const cleanFixtures = async (dataSource: DataSource) => {
     );
   }
 
-  Promise.all(promises);
+  await Promise.all(promises);
 };
 
 export const getToken = (id: string, email: string) => {
