@@ -2,36 +2,30 @@ import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
+import { DataSourceOptions } from 'typeorm';
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   useFactory: async (): Promise<TypeOrmModuleOptions> => {
     return {
       type: 'mysql',
-      host: 'mysql',
-      port: 3306,
+      host: process.env.MYSQL_HOST ?? 'mysql',
+      port: Number(process.env.MYSQL_PORT ?? 3306),
       database: process.env.MYSQL_DATABASE,
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       entities: [__dirname + '/../../../../**/*.entity{.ts,.js}'],
       migrations: [__dirname + '/../migration/*{.ts,.js}'],
-
-      cli: {
-        migrationsDir: __dirname + '/../migrations',
-      },
     };
   },
 };
 
-export const typeOrmConfig: TypeOrmModuleOptions = {
+export const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',
-  host: 'mysql',
-  port: 3306,
+  host: process.env.MYSQL_HOST ?? 'mysql',
+  port: Number(process.env.MYSQL_PORT ?? 3306),
   database: process.env.MYSQL_DATABASE,
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/migrations/*{.ts,.js}'],
-  cli: {
-    migrationsDir: 'src/sharedKernel/adapters/primary/migrations',
-  },
 };

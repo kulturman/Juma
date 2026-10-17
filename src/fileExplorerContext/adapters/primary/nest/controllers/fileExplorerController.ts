@@ -26,14 +26,14 @@ export class FileExplorerController {
     private readonly downloadFile: DownloadFile,
   ) {}
 
-  @Get('folder/:folderPath?')
+  @Get('folder{/:folderPath}')
   getFolderContent(@Req() req, @Param('folderPath') folderPath: string) {
     return this.retrieveDirectoryContent.handle(
       req.user.id as number,
       folderPath || '',
     );
   }
-  @Post('folder/:folderPath?')
+  @Post('folder{/:folderPath}')
   async createDirectory(
     @Req() req,
     @Body('folderName') folderName: string,

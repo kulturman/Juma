@@ -14,6 +14,6 @@ export class TypeORMTorrentRepository implements TorrentRepository {
   }
 
   async findById(id: number): Promise<Torrent> | undefined {
-    return await this.torrentRepository.findOne({ id });
+    return await this.torrentRepository.findOneBy({ id });
   }
 }

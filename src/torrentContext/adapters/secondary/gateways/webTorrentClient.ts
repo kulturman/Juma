@@ -2,7 +2,7 @@ import {
   TorrentClient,
   TorrentProgressionListener,
 } from '../../../hexagon/gateways/torrentClient';
-import * as WebTorrent from 'webtorrent';
+import WebTorrent from 'webtorrent';
 
 export class WebTorrentClient implements TorrentClient {
   start(

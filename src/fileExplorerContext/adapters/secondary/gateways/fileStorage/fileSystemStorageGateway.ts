@@ -1,6 +1,6 @@
 import { FileStorageGateway } from '../../../../hexagon/gateways/fileStorageGateway';
 import * as fs from 'fs';
-import * as dirTree from 'directory-tree';
+import dirTree from 'directory-tree';
 import { LogicException } from '../../../../../sharedKernel/hexagon/exceptions/logicException';
 import {
   DirectoryContent,

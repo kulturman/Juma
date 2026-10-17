@@ -9,11 +9,11 @@ export class TypeORMAuthRepository implements AuthRepository {
     private userRepository: Repository<User>,
   ) {}
   find(id: number): Promise<User> {
-    return this.userRepository.findOne(id);
+    return this.userRepository.findOneBy({ id });
   }
 
   getByEmail(email: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ email });
+    return this.userRepository.findOneBy({ email });
   }
 
   save(user: User): Promise<User | undefined> {
