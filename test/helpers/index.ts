@@ -7,35 +7,43 @@ import {
 } from 'typeorm-fixtures-cli/dist';
 import * as path from 'path';
 import * as jwt from 'jsonwebtoken';
-import { getConnection, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
-export const loadFixtures = async () => {
+export const loadFixtures = async (dataSource: DataSource) => {
   const loader = new Loader();
   loader.load(path.resolve('./fixtures'));
   const resolver = new Resolver();
   const fixtures = resolver.resolve(loader.fixtureConfigs);
-  const builder = new Builder(getConnection(), new Parser());
+  const builder = new Builder(dataSource, new Parser(), false);
   const promises = [];
 
   for (const fixture of fixturesIterator(fixtures)) {
     const entity = await builder.build(fixture);
-    promises.push(getRepository(entity.constructor.name).save(entity));
+    promises.push(
+      dataSource.getRepository(entity.constructor.name).save(entity),
+    );
   }
 
   await Promise.all(promises);
 };
 
-export const cleanFixtures = async () => {
+export const cleanFixtures = async (dataSource: DataSource) => {
   const loader = new Loader();
   loader.load(path.resolve('./fixtures'));
   const resolver = new Resolver();
   const fixtures = resolver.resolve(loader.fixtureConfigs);
-  const builder = new Builder(getConnection(), new Parser());
+  const builder = new Builder(dataSource, new Parser(), false);
   const promises = [];
 
   for (const fixture of fixturesIterator(fixtures)) {
     const entity = await builder.build(fixture);
-    promises.push(getRepository(entity.constructor.name).delete({}));
+    promises.push(
+      dataSource
+        .getRepository(entity.constructor.name)
+        .createQueryBuilder()
+        .delete()
+        .execute(),
+    );
   }
 
   Promise.all(promises);

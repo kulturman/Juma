@@ -6,17 +6,18 @@ import {
 } from '../../../../../../test/helpers';
 import { AppModule } from '../../../../../app.module';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
+import request from 'supertest';
+import { DataSource } from 'typeorm';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    await loadFixtures();
+    await loadFixtures(app.get(DataSource));
   });
 
   afterEach(async () => {
-    await cleanFixtures();
+    await cleanFixtures(app.get(DataSource));
   });
 
   beforeAll(async () => {

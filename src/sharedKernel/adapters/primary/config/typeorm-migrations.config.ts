@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm';
 import { typeOrmConfig } from './typeorm.config';
 
-export = typeOrmConfig;
+export default new DataSource(typeOrmConfig);

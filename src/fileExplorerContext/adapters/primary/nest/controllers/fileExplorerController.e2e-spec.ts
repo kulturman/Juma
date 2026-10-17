@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../../../../../app.module';
-import * as request from 'supertest';
+import request from 'supertest';
 import { getToken } from '../../../../../../test/helpers';
 import * as fs from 'fs';
 
